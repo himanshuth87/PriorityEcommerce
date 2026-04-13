@@ -70,7 +70,7 @@ export const Home = () => {
   };
 
   return (
-    <main className="font-outfit">
+    <main className="font-outfit overflow-x-hidden">
       {/* Hero Section */}
       <section
         className="relative w-full aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] bg-black overflow-hidden"
@@ -165,7 +165,7 @@ export const Home = () => {
       </section>
 
       {/* Product Tabs Section */}
-      <section className="pt-10 md:pt-24 pb-12 bg-white">
+      <section className="pt-10 md:pt-24 pb-12 bg-white overflow-hidden">
         <div className="container mx-auto px-4 md:px-8">
           <div className="flex overflow-x-auto no-scrollbar gap-4 md:gap-8 md:justify-center md:flex-wrap mb-8 md:mb-16 border-b border-gray-100 pb-1">
             {BACKPACK_TABS.map((tab) => (
@@ -220,7 +220,7 @@ export const Home = () => {
       </section>
 
       {/* Best Sellers Section */}
-      <section className="pb-8 pt-10 md:pt-12 bg-white overflow-hidden">
+      <section className="pb-8 pt-10 md:pt-12 bg-white overflow-x-hidden">
         <div className="container mx-auto px-4 md:px-8">
           <div className="flex flex-col items-center mb-8 md:mb-16">
             <h2 className="text-sm md:text-xl font-semibold uppercase tracking-[0.3em] md:tracking-[0.5em] text-gray-900 mb-2">Shop Best Sellers</h2>
