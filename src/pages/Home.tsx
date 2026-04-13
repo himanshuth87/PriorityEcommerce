@@ -109,18 +109,25 @@ export const Home = () => {
 
       {/* Main Categories */}
       <section className="container mx-auto px-8 py-20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {[
-            { to: '/backpacks', bg: '#fdf6c4', accent: '#f2c94c', label: 'Backpacks', img: IMG.catBackpacks },
-            { to: '/luggage', bg: '#c2f0c2', accent: '#a2d59b', label: 'Luggage', img: IMG.catLuggage },
-            { to: '/accessories', bg: '#b3d4f2', accent: '#6aa5de', label: 'Accessories', img: IMG.catAccessories },
+            { to: '/backpacks', label: 'Backpacks', img: IMG.catBackpacks },
+            { to: '/luggage', label: 'Luggage', img: IMG.catLuggage },
+            { to: '/accessories', label: 'Accessories', img: IMG.catAccessories },
           ].map((cat) => (
-            <Link key={cat.label} to={cat.to} className="group relative h-[520px] rounded-[3rem] overflow-hidden transition-all hover:-translate-y-2 shadow-xl" style={{ backgroundColor: cat.bg }}>
-              <div className="absolute inset-0 flex items-center justify-center p-8">
-                <img src={cat.img} alt={cat.label} className="w-[90%] h-auto object-contain transition-transform duration-700 group-hover:scale-110" />
-                <div className="absolute bottom-10 right-10 w-12 h-12 rounded-full bg-white flex items-center justify-center translate-y-0 shadow-lg border border-gray-100">
-                  <ArrowRight size={20} className="text-gray-900" />
-                </div>
+            <Link 
+              key={cat.label} 
+              to={cat.to} 
+              className="group relative h-[560px] rounded-[3rem] overflow-hidden transition-all duration-700 hover:-translate-y-3 shadow-2xl bg-gray-100"
+            >
+              <img 
+                src={cat.img} 
+                alt={cat.label} 
+                className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" 
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-700" />
+              <div className="absolute bottom-10 right-10 w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-2xl translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                <ArrowRight size={24} className="text-gray-900" />
               </div>
             </Link>
           ))}
