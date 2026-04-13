@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 import { getProductById, formatPrice } from '../constants/products';
 import { Star, Plus, Heart } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -20,63 +21,91 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = (props) => {
   const { addItem } = useCart();
-
+  const { toggleWishlist, isInWishlist } = useWishlist();
   const product = props.product || (props.id ? getProductById(props.id) : undefined);
 
-  const id = product?.id || props.id || '1';
-  const name = product?.name || props.name || '';
-  const price = product?.price || (typeof props.price === 'string' ? parseFloat(props.price) : props.price) || 0;
-  const originalPrice = product?.originalPrice;
-  const image = product?.image || props.image || '';
+  if (!product) return null;
+  const isWishlisted = isInWishlist(product.id);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (product) {
-      addItem(product);
-    }
+    addItem(product);
+  };
+
+  const handleToggleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWishlist(product);
   };
 
   return (
     <div className="group flex flex-col font-outfit">
       {/* Product Image Container */}
-      <div className="relative aspect-square bg-[#f9f9f9] dark:bg-[#1a1a1a] overflow-hidden border border-gray-100 dark:border-[#222] rounded-sm">
-        <Link to={`/product/${id}`} className="block h-full w-full">
-          <div className="h-full w-full flex justify-center items-center p-8">
+      <div className="relative aspect-[4/5] bg-[#f8f8f8] dark:bg-[#111] overflow-hidden rounded-xl md:rounded-[2rem] transition-all duration-500 hover:shadow-2xl">
+        <Link to={`/product/${product.id}`} className="block h-full w-full">
+          <div className="h-full w-full flex justify-center items-center p-4 md:p-6">
             <img
-              alt={name}
-              className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
-              src={image}
+              alt={product.name}
+              className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal transition-transform duration-700 group-hover:scale-110"
+              src={product.image}
               referrerPolicy="no-referrer"
               loading="lazy"
             />
           </div>
         </Link>
 
-        {/* Hover Action: Quick Add */}
-        <button
-          onClick={handleAddToCart}
-          className="absolute bottom-0 left-0 right-0 h-10 bg-black text-white text-[10px] font-semibold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-full group-hover:translate-y-0"
-        >
-          Add to Cart
-        </button>
+        {/* Status Badges */}
+        <div className="absolute bottom-3 left-3 md:bottom-4 md:left-4 flex flex-col gap-2 pointer-events-none">
+          {product.discount && (
+            <span className="bg-red-500 text-white text-[8px] md:text-[9px] font-black uppercase tracking-widest px-2 py-1 md:px-2.5 md:py-1.5 rounded-full shadow-lg">{product.discount}</span>
+          )}
+        </div>
 
         {/* Wishlist Icon */}
-        <button className="absolute top-4 right-4 text-gray-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100">
-          <Heart size={18} />
+        <button
+          onClick={handleToggleWishlist}
+          className={`absolute top-3 right-3 md:top-4 md:right-4 p-1.5 md:p-2 rounded-full backdrop-blur md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 shadow-xl z-20 ${isWishlisted ? 'bg-red-500 text-white !opacity-100' : 'bg-white/80 md:bg-white/50 hover:bg-white text-gray-900'}`}
+        >
+          <Heart size={14} className="md:hidden" fill={isWishlisted ? "currentColor" : "none"} />
+          <Heart size={16} className="hidden md:block" fill={isWishlisted ? "currentColor" : "none"} />
+        </button>
+
+        {/* Quick Add Button */}
+        <button
+          onClick={handleAddToCart}
+          className="absolute bottom-3 right-3 md:bottom-4 md:right-4 w-10 h-10 md:w-12 md:h-12 bg-white dark:bg-black text-[#14052b] dark:text-white rounded-full flex items-center justify-center shadow-xl transition-all duration-300 active:scale-90 z-20 hover:bg-priority-blue hover:text-white"
+        >
+          <Plus size={16} className="md:hidden" /><Plus size={20} className="hidden md:block" />
         </button>
       </div>
 
-      {/* Product Information */}
-      <div className="mt-4 flex flex-col items-center text-center px-2">
-        <Link to={`/product/${id}`} className="block">
-          <h4 className="font-semibold text-[13px] text-gray-900 uppercase tracking-wider mb-1 group-hover:text-priority-blue transition-colors line-clamp-1">{name}</h4>
-        </Link>
-        <div className="flex items-center gap-3">
-          <span className="font-semibold text-[13px] text-gray-900">Rs. {price.toLocaleString()}</span>
-          {originalPrice && (
-            <span className="text-gray-400 line-through text-[11px] font-semibold">Rs. {originalPrice.toLocaleString()}</span>
-          )}
+      {/* Product Info */}
+      <div className="mt-3 md:mt-5 px-1 pb-2 space-y-0.5 md:space-y-1">
+        <div className="flex justify-between items-start gap-2">
+          <Link to={`/product/${product.id}`}>
+            <h3 className="text-[11px] md:text-[13px] font-semibold text-[#14052b] dark:text-[#f8f8f8] leading-tight group-hover:text-priority-blue transition-colors line-clamp-2 uppercase italic tracking-tighter">
+              {product.name}
+            </h3>
+          </Link>
+        </div>
+
+        <div className="flex items-center gap-1.5 pb-0.5 md:pb-1">
+          <div className="flex gap-0.5">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} size={8} className={i < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-200 dark:text-gray-800'} />
+            ))}
+          </div>
+          <span className="text-[8px] md:text-[9px] font-bold text-gray-300 uppercase tracking-tighter">({product.reviews})</span>
+        </div>
+
+        <div className="flex items-center gap-2 md:gap-3">
+          <span className="text-[13px] md:text-[15px] font-black text-priority-blue italic tracking-tighter">
+            {formatPrice(product.price)}
+          </span>
+          <span className="text-[10px] md:text-[11px] font-bold text-gray-300 line-through decoration-1 opacity-60 tracking-tighter italic">
+            {formatPrice(product.originalPrice)}
+          </span>
         </div>
       </div>
     </div>

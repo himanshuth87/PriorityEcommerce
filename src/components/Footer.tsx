@@ -6,10 +6,10 @@ import { useAuth } from '../context/AuthContext';
 export const Footer = () => {
   const { isAuthenticated, user } = useAuth();
   return (
-    <footer className="bg-priority-dark text-gray-300 py-12 text-sm font-outfit">
-      <div className="container mx-auto px-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-12">
+    <footer className="bg-priority-dark text-gray-300 py-10 md:py-12 pb-28 lg:pb-12 text-sm font-outfit">
+      <div className="container mx-auto px-5 md:px-10 grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-12">
         {/* Brand */}
-        <div className="col-span-1 sm:col-span-2 md:col-span-1 break-inside-avoid">
+        <div className="col-span-2 md:col-span-1 break-inside-avoid">
           <Link to="/" className="mb-8 block">
             <img src="/Priority Logo-02.png" alt="Priority Bags" className="h-8 w-auto brightness-0 invert" />
           </Link>
@@ -49,7 +49,7 @@ export const Footer = () => {
           </ul>
         </div>
 
-        <div>
+        <div className="col-span-2 md:col-span-1">
           <h4 className="text-white font-semibold mb-6 uppercase text-[10px] tracking-[0.2em]">Contact Us</h4>
           <address className="not-italic space-y-5 text-xs font-medium">
             <div className="flex items-start gap-3">
@@ -68,7 +68,7 @@ export const Footer = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-10 mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div className="container mx-auto px-5 md:px-10 mt-10 md:mt-16 pt-6 md:pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 md:gap-6">
         <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-widest">&copy; {new Date().getFullYear()} High Spirit Commercial Ventures Pvt. Ltd. All rights reserved.</p>
         <div className="flex items-center gap-8">
           <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors text-[10px] font-semibold uppercase tracking-widest">Instagram</a>

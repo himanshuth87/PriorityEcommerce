@@ -87,32 +87,32 @@ export const Checkout = () => {
     <main className="bg-white min-h-screen font-outfit selection:bg-priority-blue selection:text-white pb-32">
       {/* Subtle Breadcrumb */}
       <nav className="border-b border-gray-100 bg-gray-50/30">
-        <div className="container mx-auto px-8 py-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
+        <div className="container mx-auto px-4 md:px-8 py-3 md:py-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
            <Link to="/" className="hover:text-priority-blue transition-colors">Home</Link>
            <ChevronRight size={10} />
            <span className="text-gray-900">Checkout</span>
         </div>
       </nav>
 
-      <div className="container mx-auto px-8 max-w-[1300px] pt-16">
-        <div className="flex flex-col lg:flex-row gap-20">
+      <div className="container mx-auto px-4 md:px-8 max-w-[1300px] pt-8 md:pt-16">
+        <div className="flex flex-col lg:flex-row gap-10 md:gap-20">
           {/* Main Content */}
-          <div className="lg:w-[60%] space-y-16">
-            <div className="space-y-4">
-               <span className="text-priority-blue text-[11px] font-black uppercase tracking-[0.4em]">Final Step</span>
-               <h1 className="text-6xl font-black tracking-tighter uppercase italic text-gray-900">Checkout</h1>
+          <div className="lg:w-[60%] space-y-8 md:space-y-16">
+            <div className="space-y-2 md:space-y-4">
+               <span className="text-priority-blue text-[10px] md:text-[11px] font-black uppercase tracking-[0.3em] md:tracking-[0.4em]">Final Step</span>
+               <h1 className="text-3xl md:text-6xl font-black tracking-tighter uppercase italic text-gray-900">Checkout</h1>
             </div>
 
             {/* Delivery Form */}
-            <section className="space-y-10">
-              <div className="flex items-center gap-4 border-b border-gray-100 pb-6">
-                 <div className="w-12 h-12 bg-priority-blue/5 rounded-2xl flex items-center justify-center">
-                    <Truck className="w-6 h-6 text-priority-blue" />
+            <section className="space-y-6 md:space-y-10">
+              <div className="flex items-center gap-3 md:gap-4 border-b border-gray-100 pb-4 md:pb-6">
+                 <div className="w-10 h-10 md:w-12 md:h-12 bg-priority-blue/5 rounded-xl md:rounded-2xl flex items-center justify-center">
+                    <Truck className="w-5 h-5 md:w-6 md:h-6 text-priority-blue" />
                  </div>
-                 <h2 className="text-2xl font-black uppercase tracking-tight italic">Delivery Information</h2>
+                 <h2 className="text-lg md:text-2xl font-black uppercase tracking-tight italic">Delivery Information</h2>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8">
                 {[
                   { label: 'Full Recipient Name', field: 'name', type: 'text', placeholder: 'Name on identification', span: false },
                   { label: 'Communication Email', field: 'email', type: 'email', placeholder: 'For order tracking', span: false },
@@ -124,14 +124,14 @@ export const Checkout = () => {
                   { label: 'Postal Code', field: 'pincode', type: 'text', placeholder: '6-digit PIN', span: false },
                 ].map((f) => (
                   <div key={f.field} className={f.span ? 'sm:col-span-2' : ''}>
-                    <label className="block text-[10px] font-black text-priority-blue uppercase tracking-widest mb-3 ml-1">{f.label}</label>
+                    <label className="block text-[9px] md:text-[10px] font-black text-priority-blue uppercase tracking-widest mb-2 md:mb-3 ml-1">{f.label}</label>
                     <input
                       required
                       type={f.type}
                       value={(form as any)[f.field]}
                       onChange={(e) => updateField(f.field, e.target.value)}
                       placeholder={f.placeholder}
-                      className="w-full px-6 py-5 bg-gray-50 border border-gray-100 rounded-3xl focus:outline-none focus:ring-8 focus:ring-priority-blue/5 focus:border-priority-blue focus:bg-white transition-all text-sm font-bold uppercase tracking-tight placeholder:text-gray-300"
+                      className="w-full px-4 py-3.5 md:px-6 md:py-5 bg-gray-50 border border-gray-100 rounded-xl md:rounded-3xl focus:outline-none focus:ring-4 md:focus:ring-8 focus:ring-priority-blue/5 focus:border-priority-blue focus:bg-white transition-all text-sm font-bold uppercase tracking-tight placeholder:text-gray-300"
                     />
                   </div>
                 ))}
@@ -139,7 +139,7 @@ export const Checkout = () => {
             </section>
 
             {/* Payment Summary */}
-            <section className="bg-gray-50 rounded-[3rem] p-12 border border-gray-100 space-y-6 relative overflow-hidden group">
+            <section className="bg-gray-50 rounded-2xl md:rounded-[3rem] p-6 md:p-12 border border-gray-100 space-y-6 relative overflow-hidden group">
                <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none group-hover:scale-110 transition-transform duration-[2s]">
                   <CreditCard size={120} className="text-priority-blue" />
                </div>
@@ -157,37 +157,37 @@ export const Checkout = () => {
 
           {/* Sidebar Receipt */}
           <aside className="lg:w-[40%]">
-            <div className="sticky top-24 bg-white rounded-[3rem] border border-gray-100 shadow-2xl shadow-black/[0.03] p-12 space-y-10">
+            <div className="lg:sticky lg:top-24 bg-white rounded-2xl md:rounded-[3rem] border border-gray-100 shadow-2xl shadow-black/[0.03] p-6 md:p-12 space-y-6 md:space-y-10 mb-20 md:mb-0">
               <div>
-                 <h2 className="text-2xl font-black uppercase italic tracking-tighter mb-8 pb-4 border-b border-gray-100">Review Items</h2>
-                 <div className="space-y-8 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar">
+                 <h2 className="text-lg md:text-2xl font-black uppercase italic tracking-tighter mb-4 md:mb-8 pb-3 md:pb-4 border-b border-gray-100">Review Items</h2>
+                 <div className="space-y-4 md:space-y-8 max-h-[300px] md:max-h-[400px] overflow-y-auto pr-2 md:pr-4 custom-scrollbar">
                    {items.map((item) => (
-                     <div key={item.product.id} className="flex gap-6 items-center">
-                        <div className="w-20 h-20 bg-gray-50 rounded-2xl p-4 border border-gray-100 flex items-center justify-center shrink-0">
+                     <div key={item.product.id} className="flex gap-4 md:gap-6 items-center">
+                        <div className="w-16 h-16 md:w-20 md:h-20 bg-gray-50 rounded-xl md:rounded-2xl p-2.5 md:p-4 border border-gray-100 flex items-center justify-center shrink-0">
                            <img src={item.product.image} alt={item.product.name} className="w-full h-full object-contain" />
                         </div>
                         <div className="min-w-0">
-                           <p className="text-sm font-black uppercase tracking-tight text-gray-900 truncate">{item.product.name}</p>
-                           <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mt-1">{item.quantity} Unit(s) • {formatPrice(item.product.price)}</p>
+                           <p className="text-xs md:text-sm font-black uppercase tracking-tight text-gray-900 truncate">{item.product.name}</p>
+                           <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-gray-400 mt-1">{item.quantity} Unit(s) • {formatPrice(item.product.price)}</p>
                         </div>
                      </div>
                    ))}
                  </div>
               </div>
 
-              <div className="space-y-5 pt-10 border-t border-gray-100">
-                <div className="flex justify-between text-[11px] font-black uppercase tracking-[0.2em] text-gray-400">
-                   <span>Unit Subtotal</span>
+              <div className="space-y-4 md:space-y-5 pt-6 md:pt-10 border-t border-gray-100">
+                <div className="flex justify-between text-[10px] md:text-[11px] font-black uppercase tracking-[0.15em] md:tracking-[0.2em] text-gray-400">
+                   <span>Subtotal</span>
                    <span>{formatPrice(total)}</span>
                 </div>
-                <div className="flex justify-between text-[11px] font-black uppercase tracking-[0.2em] text-gray-400">
-                   <span>Logistic Fee</span>
-                   <span className={shipping === 0 ? 'text-green-600' : ''}>{shipping === 0 ? 'COMPLIMENTARY' : formatPrice(shipping)}</span>
+                <div className="flex justify-between text-[10px] md:text-[11px] font-black uppercase tracking-[0.15em] md:tracking-[0.2em] text-gray-400">
+                   <span>Shipping</span>
+                   <span className={shipping === 0 ? 'text-green-600' : ''}>{shipping === 0 ? 'FREE' : formatPrice(shipping)}</span>
                 </div>
-                <div className="flex justify-between items-end pt-8 mt-4 border-t border-gray-100">
+                <div className="flex justify-between items-end pt-6 md:pt-8 mt-4 border-t border-gray-100">
                    <div className="flex flex-col">
-                      <span className="text-[10px] font-black uppercase tracking-[0.4em] text-priority-blue mb-1">Total Payable</span>
-                      <span className="text-4xl font-black tracking-tighter uppercase italic">{formatPrice(grandTotal)}</span>
+                      <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] md:tracking-[0.4em] text-priority-blue mb-1">Total Payable</span>
+                      <span className="text-2xl md:text-4xl font-black tracking-tighter uppercase italic">{formatPrice(grandTotal)}</span>
                    </div>
                 </div>
               </div>
@@ -195,7 +195,7 @@ export const Checkout = () => {
               <button
                 onClick={handlePlaceOrder}
                 disabled={!isFormValid || isProcessing}
-                className="w-full bg-priority-blue text-white font-black text-xs py-5 rounded-2xl flex items-center justify-center gap-4 hover:scale-[1.02] active:scale-98 transition-all shadow-2xl shadow-priority-blue/30 uppercase tracking-[0.2em] disabled:opacity-30 disabled:grayscale h-16 group"
+                className="w-full bg-priority-blue text-white font-black text-[10px] md:text-xs py-4 md:py-5 rounded-xl md:rounded-2xl flex items-center justify-center gap-3 md:gap-4 hover:scale-[1.02] active:scale-98 transition-all shadow-2xl shadow-priority-blue/30 uppercase tracking-[0.15em] md:tracking-[0.2em] disabled:opacity-30 disabled:grayscale h-14 md:h-16 group"
               >
                 {isProcessing ? (
                   <Loader2 className="w-5 h-5 animate-spin" />

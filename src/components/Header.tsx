@@ -91,16 +91,16 @@ export const Header = ({ onSearchOpen }: { onSearchOpen: () => void }) => {
   ];
 
   return (
-    <header className={`sticky top-0 left-0 right-0 z-50 transition-all duration-[0.8s] h-[72px] bg-[var(--color-nav-bg)] ${isScrolled ? 'shadow-[0_8px_30px_rgba(0,0,0,0.12)] backdrop-blur-md' : ''
+    <header className={`sticky top-0 left-0 right-0 z-50 transition-all duration-[0.8s] h-[60px] md:h-[72px] bg-[var(--color-nav-bg)] ${isScrolled ? 'shadow-[0_8px_30px_rgba(0,0,0,0.12)] backdrop-blur-md' : ''
       }`}>
-      <div className="max-w-[1440px] mx-auto px-8 h-full flex justify-between items-center text-white">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-8 h-full flex justify-between items-center text-white">
 
         <div className="flex-1 flex items-center">
           <Link to="/" className="flex items-center">
             <img
               src="/nav bar.png"
               alt="Priority"
-              className="w-[200px] h-auto transition-all duration-300"
+              className="w-[130px] md:w-[200px] h-auto transition-all duration-300"
             />
           </Link>
         </div>
@@ -111,11 +111,11 @@ export const Header = ({ onSearchOpen }: { onSearchOpen: () => void }) => {
           </ul>
         </nav>
 
-        <div className="flex-1 flex items-center justify-end gap-6 font-outfit">
+        <div className="flex-1 flex items-center justify-end gap-3 md:gap-6 font-outfit">
           {/* Dark Mode Toggle */}
           <button
             onClick={toggleDarkMode}
-            className="p-2 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300"
+            className="hidden md:flex p-2 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300"
             aria-label="Toggle dark mode"
           >
             {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
@@ -129,7 +129,7 @@ export const Header = ({ onSearchOpen }: { onSearchOpen: () => void }) => {
             <span className="text-[11px] font-semibold uppercase tracking-widest border-r border-white/20 pr-4">Search</span>
           </button>
 
-          <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4">
             <Link
               to="/wishlist"
               className={`p-2 rounded-full transition-all duration-300 ${location.pathname === '/wishlist'
@@ -194,26 +194,35 @@ export const Header = ({ onSearchOpen }: { onSearchOpen: () => void }) => {
           </div>
         </div>
 
-        <button className="lg:hidden p-2 ml-4 text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+        <button className="lg:hidden p-2 text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div initial={{ opacity: 0, x: '100%' }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: '100%' }} className="fixed inset-0 z-[60] bg-[var(--color-bg-main)] text-[var(--color-text-main)] p-8 overflow-y-auto font-outfit">
-            <div className="flex justify-between items-center mb-16">
-              <img src="/nav bar.png" alt="Priority" className="w-[160px] h-auto" />
-              <button onClick={() => setIsMenuOpen(false)} className="p-2 border border-[var(--color-border-main)] rounded-full text-[var(--color-text-main)]"><X size={32} /></button>
+          <motion.div initial={{ opacity: 0, x: '100%' }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: '100%' }} className="fixed inset-0 z-[60] bg-[var(--color-bg-main)] text-[var(--color-text-main)] overflow-y-auto font-outfit">
+            <div className="flex justify-between items-center px-5 py-4 border-b border-[var(--color-border-main)]">
+              <img src="/nav bar.png" alt="Priority" className="w-[120px] h-auto dark:invert" />
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={toggleDarkMode}
+                  className="p-2.5 rounded-full border border-[var(--color-border-main)] text-[var(--color-text-muted)]"
+                  aria-label="Toggle dark mode"
+                >
+                  {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+                </button>
+                <button onClick={() => setIsMenuOpen(false)} className="p-2.5 border border-[var(--color-border-main)] rounded-full text-[var(--color-text-main)]"><X size={20} /></button>
+              </div>
             </div>
-            <nav className="space-y-6">
+            <nav className="px-5 py-6 space-y-1">
               {navData.map((nav) => (
-                <div key={nav.title} className="space-y-4">
-                  <Link to={nav.to} className="block text-4xl font-semibold uppercase tracking-tighter text-[var(--color-text-main)]" onClick={() => setIsMenuOpen(false)}>{nav.title}</Link>
+                <div key={nav.title}>
+                  <Link to={nav.to} className="block py-3.5 text-xl font-bold uppercase tracking-tight text-[var(--color-text-main)] border-b border-[var(--color-border-main)]" onClick={() => setIsMenuOpen(false)}>{nav.title}</Link>
                   {nav.items && (
-                    <div className="pl-4 border-l-2 border-priority-blue/20 flex flex-col gap-4">
+                    <div className="pl-4 py-2 flex flex-col gap-1">
                       {nav.items.map(item => (
-                        <Link key={item.slug} to={`/${item.slug}`} className="text-sm font-semibold uppercase text-[var(--color-text-muted)] tracking-widest" onClick={() => setIsMenuOpen(false)}>
+                        <Link key={item.slug} to={`/${item.slug}`} className="py-2 text-xs font-semibold uppercase text-[var(--color-text-muted)] tracking-widest" onClick={() => setIsMenuOpen(false)}>
                           {item.label}
                         </Link>
                       ))}
@@ -222,8 +231,15 @@ export const Header = ({ onSearchOpen }: { onSearchOpen: () => void }) => {
                 </div>
               ))}
             </nav>
-            <div className="mt-16 pt-8 border-t border-[var(--color-border-main)]">
-              <Link to="/login" className="w-full bg-priority-blue text-white py-5 rounded-2xl text-[11px] font-semibold uppercase tracking-widest text-center block" onClick={() => setIsMenuOpen(false)}>Member Login</Link>
+            <div className="px-5 pt-4 pb-8 border-t border-[var(--color-border-main)]">
+              {isAuthenticated ? (
+                <div className="space-y-3">
+                  <Link to={user?.role === 'admin' ? "/admin" : "/account"} className="w-full bg-priority-blue text-white py-4 rounded-2xl text-[11px] font-semibold uppercase tracking-widest text-center block" onClick={() => setIsMenuOpen(false)}>My Account</Link>
+                  <button onClick={() => { logout(); setIsMenuOpen(false); }} className="w-full border border-red-200 text-red-500 py-4 rounded-2xl text-[11px] font-semibold uppercase tracking-widest text-center block">Logout</button>
+                </div>
+              ) : (
+                <Link to="/login" className="w-full bg-priority-blue text-white py-4 rounded-2xl text-[11px] font-semibold uppercase tracking-widest text-center block" onClick={() => setIsMenuOpen(false)}>Member Login</Link>
+              )}
             </div>
           </motion.div>
         )}

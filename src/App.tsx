@@ -2,11 +2,13 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { useEffect, useState } from 'react';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
+import { WishlistProvider } from './context/WishlistContext';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { AuthModal } from './components/AuthModal';
 import { SearchModal } from './components/SearchModal';
+import { MobileBottomNav } from './components/MobileBottomNav';
 import { ToastContainer } from './components/ui/Toast';
 import { Home } from './pages/Home';
 import { CategoryPage } from './pages/CategoryPage';
@@ -22,6 +24,7 @@ import { ContactUs } from './pages/ContactUs';
 import { Careers } from './pages/Careers';
 import { OurTeam } from './pages/OurTeam';
 import { ShippingPolicy, ReturnsRefunds, PrivacyPolicy, TermsOfService } from './pages/Policies';
+import { Wishlist } from './pages/Wishlist';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -44,6 +47,7 @@ function AppContent() {
         <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/junior" element={<JuniorPage />} />
@@ -68,6 +72,7 @@ function AppContent() {
       <CartDrawer />
       <AuthModal />
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      <MobileBottomNav onSearchOpen={() => setSearchOpen(true)} />
       <ToastContainer />
     </>
   );
@@ -77,9 +82,11 @@ export default function App() {
   return (
     <Router>
       <AuthProvider>
-        <CartProvider>
-          <AppContent />
-        </CartProvider>
+        <WishlistProvider>
+          <CartProvider>
+            <AppContent />
+          </CartProvider>
+        </WishlistProvider>
       </AuthProvider>
     </Router>
   );
