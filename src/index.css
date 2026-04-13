@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-outfit: "Outfit", sans-serif;
+
+  --color-priority-blue: #4b48b5;
+  --color-priority-dark: #302a5e;
+  --color-hero-blue: #5c83e8;
+  --color-banner-blue: #5faee2;
+  
+  /* Theme Variables */
+  --color-bg-main: #ffffff;
+  --color-bg-card: #f9f9f9;
+  --color-text-main: #000000;
+  --color-text-muted: #666666;
+  --color-border-main: #eeeeee;
+  --color-nav-bg: #4b48b5; /* Default Blue */
+}
+
+@layer base {
+  .dark {
+    --color-bg-main: #000000;
+    --color-bg-card: #111111;
+    --color-text-main: #ffffff;
+    --color-text-muted: #a0a0a0;
+    --color-border-main: #222222;
+    --color-nav-bg: #000000; /* Dark Mode Black */
+  }
+
+  body {
+    background-color: var(--color-bg-main);
+    color: var(--color-text-main);
+    font-family: var(--font-outfit);
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+.font-outfit { font-family: var(--font-outfit); }
+
+@utility no-scrollbar {
+  &::-webkit-scrollbar { display: none; }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html { scroll-behavior: smooth; }
+
+:focus-visible {
+  outline: 2px solid var(--color-priority-blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Custom Price Range Slider */
+input[type='range'] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: #f1f1f1;
+  border-radius: 2px;
+  outline: none;
+  margin: 10px 0;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #000000;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 4px solid white;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  transition: all 0.2s ease;
+}
+
+input[type='range']::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: #000000;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 4px solid white;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
