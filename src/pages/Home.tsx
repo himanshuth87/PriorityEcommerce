@@ -165,7 +165,7 @@ export const Home = () => {
       </section>
 
       {/* Product Tabs Section */}
-      <section className="pt-10 md:pt-24 pb-12 bg-white overflow-hidden">
+      <section className="pt-10 md:pt-24 pb-12 bg-white">
         <div className="container mx-auto px-4 md:px-8">
           <div className="flex overflow-x-auto no-scrollbar gap-4 md:gap-8 md:justify-center md:flex-wrap mb-8 md:mb-16 border-b border-gray-100 pb-1">
             {BACKPACK_TABS.map((tab) => (
@@ -191,7 +191,7 @@ export const Home = () => {
               </div>
             )}
 
-            <div className="flex-1 relative min-w-0 group/tabs">
+            <div className="flex-1 relative min-w-0 group/tabs overflow-hidden md:overflow-visible">
               <div className="absolute top-1/2 -translate-y-1/2 w-full hidden md:flex justify-between pointer-events-none z-10">
                 <button
                   onClick={scrollLeft}
@@ -207,7 +207,7 @@ export const Home = () => {
                 </button>
               </div>
 
-              <div ref={scrollRef} className="flex gap-4 md:gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-6">
+              <div ref={scrollRef} className="flex gap-4 md:gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-6 touch-pan-x">
                 {tabProducts.map(p => (
                   <div key={p.id} className="min-w-[200px] md:min-w-[300px] snap-start">
                     <ProductCard product={p} />
@@ -220,13 +220,13 @@ export const Home = () => {
       </section>
 
       {/* Best Sellers Section */}
-      <section className="pb-8 pt-10 md:pt-12 bg-white overflow-x-hidden">
+      <section className="pb-8 pt-10 md:pt-12 bg-white">
         <div className="container mx-auto px-4 md:px-8">
           <div className="flex flex-col items-center mb-8 md:mb-16">
             <h2 className="text-sm md:text-xl font-semibold uppercase tracking-[0.3em] md:tracking-[0.5em] text-gray-900 mb-2">Shop Best Sellers</h2>
           </div>
 
-          <div className="relative group/carousel">
+          <div className="relative group/carousel overflow-hidden md:overflow-visible">
             <div className="absolute top-1/2 -translate-y-1/2 w-full hidden md:flex justify-between pointer-events-none z-10">
               <button
                 onClick={() => bestSellersRef.current?.scrollBy({ left: -400, behavior: 'smooth' })}
@@ -244,7 +244,7 @@ export const Home = () => {
 
             <div
               ref={bestSellersRef}
-              className="flex gap-4 md:gap-6 overflow-x-auto no-scrollbar scroll-smooth pb-10 px-1 sm:px-4"
+              className="flex gap-4 md:gap-6 overflow-x-auto no-scrollbar scroll-smooth pb-10 px-1 sm:px-4 touch-pan-x"
               style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
             >
               {getBestSellers().map((product) => (
