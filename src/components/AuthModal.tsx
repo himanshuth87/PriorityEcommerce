@@ -45,7 +45,7 @@ export const AuthModal = () => {
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="fixed inset-0 z-[90] flex items-center justify-center p-4"
           >
-            <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-white dark:bg-[#111] rounded-2xl w-full max-w-md shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
               {/* Header */}
               <div className="bg-priority-dark text-white p-6 relative">
                 <button

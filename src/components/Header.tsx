@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, User, ShoppingCart, ChevronDown, Menu, X, LogOut, LayoutDashboard, Heart } from 'lucide-react';
+import { Search, User, ShoppingCart, ChevronDown, Menu, X, LogOut, LayoutDashboard, Heart, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -60,13 +60,11 @@ export const Header = ({ onSearchOpen }: { onSearchOpen: () => void }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      setIsDarkMode(document.documentElement.classList.contains('dark'));
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
-  }, []);
+  const toggleDarkMode = () => {
+    const dark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+    setIsDarkMode(dark);
+  };
 
   const navData = [
     {
@@ -114,6 +112,15 @@ export const Header = ({ onSearchOpen }: { onSearchOpen: () => void }) => {
         </nav>
 
         <div className="flex-1 flex items-center justify-end gap-6 font-outfit">
+          {/* Dark Mode Toggle */}
+          <button
+            onClick={toggleDarkMode}
+            className="p-2 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300"
+            aria-label="Toggle dark mode"
+          >
+            {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+
           <button
             onClick={onSearchOpen}
             className="hidden xl:flex items-center gap-3 px-6 py-2.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/15 hover:border-white/30 transition-all text-white/60 hover:text-white"
