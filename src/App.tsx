@@ -7,6 +7,7 @@ import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { AuthModal } from './components/AuthModal';
 import { SearchModal } from './components/SearchModal';
+import { MobileBottomNav } from './components/MobileBottomNav';
 import { ToastContainer } from './components/ui/Toast';
 import { Home } from './pages/Home';
 import { CategoryPage } from './pages/CategoryPage';
@@ -68,6 +69,7 @@ function AppContent() {
       <CartDrawer />
       <AuthModal />
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      <MobileBottomNav onSearchOpen={() => setSearchOpen(true)} />
       <ToastContainer />
     </>
   );
