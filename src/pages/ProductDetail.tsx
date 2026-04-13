@@ -111,8 +111,8 @@ export const ProductDetail = () => {
   ];
 
   return (
-    <main className="bg-white min-h-screen font-outfit pt-4 md:pt-8">
-      <div className="container mx-auto px-4 md:px-8 py-6 md:py-16">
+    <main className="bg-white min-h-screen font-outfit pt-4 md:pt-8 overflow-x-hidden relative">
+      <div className="container mx-auto px-4 md:px-8 py-6 md:py-16 relative">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16">
 
           {/* Left Column: Gallery */}

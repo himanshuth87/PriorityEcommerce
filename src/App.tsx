@@ -42,7 +42,7 @@ function AppContent() {
   return (
     <>
       <ScrollToTop />
-      <div className="flex flex-col min-h-screen overflow-x-hidden">
+      <div className="flex flex-col min-h-screen relative">
         <Header onSearchOpen={() => setSearchOpen(true)} />
         <div className="flex-grow">
           <Routes>

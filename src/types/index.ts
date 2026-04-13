@@ -22,7 +22,6 @@ export interface Product {
   createdAt: string;
   isPremium?: boolean;
   gender?: 'men' | 'women' | 'kids' | 'unisex';
-  colors?: { name: string; hex: string; imageIndex: number }[];
 }
 
 export interface CategoryInfo {
