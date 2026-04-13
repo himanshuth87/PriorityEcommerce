@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
@@ -22,10 +22,14 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = (props) => {
   const { addItem } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const [activeVariantIndex, setActiveVariantIndex] = useState(0);
   const product = props.product || (props.id ? getProductById(props.id) : undefined);
 
   if (!product) return null;
   const isWishlisted = isInWishlist(product.id);
+
+  const activeVariant = product.variants?.[activeVariantIndex];
+  const displayImage = activeVariant ? activeVariant.images[0] : product.image;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -48,7 +52,7 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
             <img
               alt={product.name}
               className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal transition-transform duration-700 group-hover:scale-110"
-              src={product.image}
+              src={displayImage}
               referrerPolicy="no-referrer"
               loading="lazy"
             />
@@ -81,7 +85,26 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
       </div>
 
       {/* Product Info */}
-      <div className="mt-3 md:mt-5 px-1 pb-2 space-y-0.5 md:space-y-1">
+      <div className="mt-3 md:mt-5 px-1 pb-2 space-y-1.5 md:space-y-2">
+        {/* Color Swatches */}
+        {product.variants && product.variants.length > 0 && (
+          <div className="flex gap-1.5 md:gap-2">
+            {product.variants.map((variant, idx) => (
+              <button
+                key={idx}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setActiveVariantIndex(idx);
+                }}
+                className={`w-3.5 h-3.5 md:w-4.5 md:h-4.5 rounded-full border-2 transition-all duration-300 scale-90 hover:scale-110 ${activeVariantIndex === idx ? 'ring-1 ring-priority-blue ring-offset-1 border-white' : 'border-transparent'}`}
+                style={{ backgroundColor: variant.colorCode }}
+                title={variant.color}
+              />
+            ))}
+          </div>
+        )}
+
         <div className="flex justify-between items-start gap-2">
           <Link to={`/product/${product.id}`}>
             <h3 className="text-[11px] md:text-[13px] font-semibold text-[#14052b] dark:text-[#f8f8f8] leading-tight group-hover:text-priority-blue transition-colors line-clamp-2 uppercase italic tracking-tighter">

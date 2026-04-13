@@ -1,4 +1,9 @@
-// ─── Product & Catalog Types ───────────────────────────────────
+export interface ProductVariant {
+  color: string;
+  colorCode: string;
+  images: string[];
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -10,6 +15,7 @@ export interface Product {
   reviews: number;
   image: string;
   images: string[];
+  variants?: ProductVariant[];
   isNew: boolean;
   highlighted: boolean;
   category: string;

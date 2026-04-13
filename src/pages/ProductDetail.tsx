@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Star,
@@ -28,12 +28,13 @@ export const ProductDetail = () => {
   const { addItem } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const [quantity, setQuantity] = useState(1);
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [selectedImage, setSelectedImage] = useState(0);
   const [openAccordion, setOpenAccordion] = useState<string | null>('highlight');
   const [userRating, setUserRating] = useState(0);
   const [showReviewForm, setShowReviewForm] = useState(false);
 
-  const product = getProductById(id || '');
+  const product = useMemo(() => getProductById(id || ''), [id]);
   const isWishlisted = product ? isInWishlist(product.id) : false;
 
   if (!product) {
@@ -48,11 +49,16 @@ export const ProductDetail = () => {
     );
   }
 
+  const activeVariant = product.variants?.[selectedVariantIndex];
+  const displayImages = activeVariant ? activeVariant.images : product.images;
   const relatedProducts = getProductsByCategory(product.category).filter((p) => p.id !== product.id).slice(0, 4);
   const inStock = product.stock > 0;
 
   const handleAddToCart = () => {
-    addItem(product, quantity);
+    // If there's a variant, we might want to pass it to the cart, but for now we just pass the product
+    // The image in the cart should ideally match the variant
+    const productWithSelectedImage = { ...product, image: displayImages[selectedImage] || product.image };
+    addItem(productWithSelectedImage, quantity);
   };
 
   const handleToggleWishlist = () => {
@@ -64,7 +70,6 @@ export const ProductDetail = () => {
       alert("Please select a star rating first!");
       return;
     }
-    // Simulate successful submission
     setShowReviewForm(false);
     setUserRating(0);
     alert("Thank you! Your verified review has been submitted for moderation.");
@@ -119,12 +124,13 @@ export const ProductDetail = () => {
           <div className="lg:col-span-7">
             <div className="lg:sticky lg:top-32 space-y-4 md:space-y-8">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                key={`${selectedVariantIndex}-${selectedImage}`}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
                 className="aspect-square bg-white border border-gray-50 rounded-2xl md:rounded-[3rem] p-6 md:p-12 flex items-center justify-center relative shadow-[0_20px_40px_-10px_rgba(0,0,0,0.05)] md:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.05)]"
               >
                 <img
-                  src={product.images[selectedImage] || product.image}
+                  src={displayImages[selectedImage] || product.image}
                   alt={product.name}
                   className="w-full h-full object-contain"
                   referrerPolicy="no-referrer"
@@ -138,7 +144,7 @@ export const ProductDetail = () => {
               </motion.div>
 
               <div className="flex gap-3 md:gap-4 pb-4 overflow-x-auto no-scrollbar">
-                {product.images.map((img, idx) => (
+                {displayImages.map((img, idx) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(idx)}
@@ -169,6 +175,30 @@ export const ProductDetail = () => {
                 <span className="text-3xl md:text-5xl font-black text-[#14052b] tracking-tighter italic">{formatPrice(product.price)}</span>
                 <span className="text-base md:text-xl text-gray-300 line-through font-black italic tracking-tighter">{formatPrice(product.originalPrice)}</span>
               </div>
+
+              {/* Variant Selector */}
+              {product.variants && product.variants.length > 0 && (
+                <div className="space-y-4 pt-4">
+                  <div className="flex items-center justify-center lg:justify-start gap-2">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Color:</span>
+                    <span className="text-[11px] font-black uppercase tracking-widest text-[#14052b]">{activeVariant?.color}</span>
+                  </div>
+                  <div className="flex flex-wrap justify-center lg:justify-start gap-3">
+                    {product.variants.map((variant, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          setSelectedVariantIndex(idx);
+                          setSelectedImage(0); // Reset image to first of variant
+                        }}
+                        className={`w-10 h-10 md:w-12 md:h-12 rounded-full border-2 transition-all p-0.5 flex items-center justify-center ${selectedVariantIndex === idx ? 'border-priority-blue shadow-lg scale-110' : 'border-gray-100 hover:border-gray-300'}`}
+                      >
+                        <div className="w-full h-full rounded-full" style={{ backgroundColor: variant.colorCode }} />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Actions */}
@@ -241,7 +271,7 @@ export const ProductDetail = () => {
                     <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
                        {[...Array(4)].map((_, i) => (
                          <div key={i} className="min-w-[140px] h-[140px] rounded-[2rem] bg-gray-50 overflow-hidden border border-gray-100 flex-shrink-0 group cursor-pointer relative shadow-sm">
-                            <img src={product.images[0] || product.image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Customer Photo" />
+                            <img src={displayImages[0] || product.image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Customer Photo" />
                             <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                               <Maximize size={20} className="text-white" />
                             </div>
