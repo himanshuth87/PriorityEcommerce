@@ -132,7 +132,7 @@ export const Header = ({ onSearchOpen }: { onSearchOpen: () => void }) => {
           <div className="flex items-center gap-4">
             <Link
               to="/wishlist"
-              className={`p-2 rounded-full transition-all duration-300 ${location.pathname === '/wishlist'
+              className={`hidden md:flex p-2 rounded-full transition-all duration-300 ${location.pathname === '/wishlist'
                 ? 'bg-white text-priority-blue scale-110 shadow-lg'
                 : 'text-white/80 hover:text-white hover:scale-110'}`}
             >
@@ -169,7 +169,7 @@ export const Header = ({ onSearchOpen }: { onSearchOpen: () => void }) => {
             ) : (
               <Link
                 to="/login"
-                className={`p-2 rounded-full transition-all duration-300 ${location.pathname === '/login'
+                className={`hidden md:flex p-2 rounded-full transition-all duration-300 ${location.pathname === '/login'
                   ? 'bg-white text-priority-blue scale-110 shadow-lg'
                   : 'text-white/80 hover:text-white hover:scale-110'}`}
               >
@@ -179,7 +179,7 @@ export const Header = ({ onSearchOpen }: { onSearchOpen: () => void }) => {
 
             <button
               onClick={() => toggleCart()}
-              className={`p-2.5 rounded-full relative transition-all duration-300 hover:scale-110 active:scale-95 ${(itemCount > 0 || location.pathname === '/checkout')
+              className={`hidden md:flex p-2.5 rounded-full relative transition-all duration-300 hover:scale-110 active:scale-95 ${(itemCount > 0 || location.pathname === '/checkout')
                 ? 'bg-white text-priority-blue scale-110 shadow-lg'
                 : 'text-white/80 hover:text-white'
                 }`}
@@ -194,7 +194,7 @@ export const Header = ({ onSearchOpen }: { onSearchOpen: () => void }) => {
           </div>
         </div>
 
-        <button className="lg:hidden p-2 ml-4 text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+        <button className="lg:hidden p-2 text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
