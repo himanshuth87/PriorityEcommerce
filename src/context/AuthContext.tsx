@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import type { User, AuthState } from '../types';
+import { api } from '../lib/api';
 
 interface AuthContextValue extends AuthState {
   login: (email: string, password: string) => Promise<boolean>;
@@ -12,7 +13,20 @@ interface AuthContextValue extends AuthState {
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
-const AUTH_KEY = 'priority-bags-auth';
+const USER_KEY = 'priority-bags-auth';
+const TOKEN_KEY = 'priority-bags-token';
+
+function mapApiUser(u: any): User {
+  return {
+    id: u.id,
+    name: u.name,
+    email: u.email,
+    phone: u.phone,
+    addresses: u.addresses || [],
+    createdAt: u.created_at || new Date().toISOString(),
+    role: u.role === 'admin' ? 'admin' : 'user',
+  };
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<AuthState>({ user: null, isAuthenticated: false, isLoading: true });
@@ -21,16 +35,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(AUTH_KEY);
-      if (saved) {
-        let user = JSON.parse(saved) as User;
-        // Fix for role updates
-        const role = (user.email.toLowerCase().includes('admin') || user.email.toLowerCase() === 'himanshu@ss') ? 'admin' : 'user';
-        if (user.role !== role) {
-          user = { ...user, role };
-          localStorage.setItem(AUTH_KEY, JSON.stringify(user));
-        }
-        setState({ user, isAuthenticated: true, isLoading: false });
+      const saved = localStorage.getItem(USER_KEY);
+      const token = localStorage.getItem(TOKEN_KEY);
+      if (saved && token) {
+        setState({ user: JSON.parse(saved), isAuthenticated: true, isLoading: false });
       } else {
         setState((s) => ({ ...s, isLoading: false }));
       }
@@ -39,47 +47,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const login = useCallback(async (email: string, _password: string): Promise<boolean> => {
-    // In production, replace with API call
-    // POST /api/auth/login { email, password }
+  const login = useCallback(async (email: string, password: string): Promise<boolean> => {
     setState((s) => ({ ...s, isLoading: true }));
-    await new Promise((r) => setTimeout(r, 800)); // simulate network
-    const role = (email.toLowerCase().includes('admin') || email.toLowerCase() === 'himanshu@ss') ? 'admin' : 'user';
-    const user: User = {
-      id: crypto.randomUUID(),
-      name: email.split('@')[0],
-      email,
-      addresses: [],
-      createdAt: new Date().toISOString(),
-      role,
-    };
-    localStorage.setItem(AUTH_KEY, JSON.stringify(user));
-    setState({ user, isAuthenticated: true, isLoading: false });
-    setShowAuthModal(false);
-    return true;
+    try {
+      const { user: raw, token } = await api.login(email, password);
+      const user = mapApiUser(raw);
+      localStorage.setItem(TOKEN_KEY, token);
+      localStorage.setItem(USER_KEY, JSON.stringify(user));
+      setState({ user, isAuthenticated: true, isLoading: false });
+      setShowAuthModal(false);
+      return true;
+    } catch (err: any) {
+      setState((s) => ({ ...s, isLoading: false }));
+      throw err;
+    }
   }, []);
 
-  const register = useCallback(async (name: string, email: string, _password: string): Promise<boolean> => {
-    // In production: POST /api/auth/register { name, email, password }
+  const register = useCallback(async (name: string, email: string, password: string): Promise<boolean> => {
     setState((s) => ({ ...s, isLoading: true }));
-    await new Promise((r) => setTimeout(r, 800));
-    const role = (email.toLowerCase().includes('admin') || email.toLowerCase() === 'himanshu@ss') ? 'admin' : 'user';
-    const user: User = {
-      id: crypto.randomUUID(),
-      name,
-      email,
-      addresses: [],
-      createdAt: new Date().toISOString(),
-      role,
-    };
-    localStorage.setItem(AUTH_KEY, JSON.stringify(user));
-    setState({ user, isAuthenticated: true, isLoading: false });
-    setShowAuthModal(false);
-    return true;
+    try {
+      const { user: raw, token } = await api.register(name, email, password);
+      const user = mapApiUser(raw);
+      localStorage.setItem(TOKEN_KEY, token);
+      localStorage.setItem(USER_KEY, JSON.stringify(user));
+      setState({ user, isAuthenticated: true, isLoading: false });
+      setShowAuthModal(false);
+      return true;
+    } catch (err: any) {
+      setState((s) => ({ ...s, isLoading: false }));
+      throw err;
+    }
   }, []);
 
   const logout = useCallback(() => {
-    localStorage.removeItem(AUTH_KEY);
+    localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(TOKEN_KEY);
     setState({ user: null, isAuthenticated: false, isLoading: false });
   }, []);
 

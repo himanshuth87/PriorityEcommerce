@@ -4,7 +4,8 @@ import { ChevronRight, ShieldCheck, Truck, CreditCard, ArrowRight, Loader2 } fro
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { formatPrice } from '../constants/products';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
+import { api } from '../lib/api';
 
 export const Checkout = () => {
   const { items, total, clearCart } = useCart();
@@ -48,11 +49,25 @@ export const Checkout = () => {
 
   const handlePlaceOrder = async () => {
     setIsProcessing(true);
-    // Simulate payment gateway delay
-    await new Promise(r => setTimeout(r, 2000));
-    setOrderPlaced(true);
-    clearCart();
-    setIsProcessing(false);
+    try {
+      await api.createOrder({
+        items: items.map((i) => ({ product_id: i.product.id, quantity: i.quantity })),
+        shipping_name: form.name,
+        shipping_phone: form.phone,
+        shipping_line1: form.line1,
+        shipping_line2: form.line2 || undefined,
+        shipping_city: form.city,
+        shipping_state: form.state,
+        shipping_pincode: form.pincode,
+        payment_method: 'cod',
+      });
+      clearCart();
+      setOrderPlaced(true);
+    } catch (err: any) {
+      alert(err.message || 'Could not place order. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const updateField = (field: string, value: string) => setForm((f) => ({ ...f, [field]: value }));
