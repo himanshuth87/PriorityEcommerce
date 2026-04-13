@@ -64,7 +64,7 @@ export const Home = () => {
   return (
     <main className="font-outfit">
       {/* Hero Section */}
-      <section className="relative w-full aspect-[50/10] md:aspect-[16/9] bg-[var(--color-bg-main)] overflow-hidden">
+      <section className="relative w-full aspect-[4/5] md:aspect-[16/9] bg-[var(--color-bg-main)] overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentHero}
@@ -136,7 +136,7 @@ export const Home = () => {
             </div>
             <div className="md:w-1/2 space-y-6">
               <span className="text-[16px] font-semibold uppercase tracking-[0.5em] text-white/60">New Arrival</span>
-              <h2 className="text-6xl md:text-6xl font-semibold leading-none uppercase tracking-tighter italic">Ready for<br />Your Journey</h2>
+              <h2 className="text-4xl md:text-7xl font-semibold leading-none uppercase tracking-tighter italic">Ready for<br />Your Journey</h2>
               <div className="flex gap-6 pt-6">
                 <Link to="/women" className="text-xs font-semibold uppercase tracking-widest border-b-2 border-white pb-1 hover:opacity-70 transition-all">Shop For Women</Link>
                 <Link to="/men" className="text-xs font-semibold uppercase tracking-widest border-b-2 border-white pb-1 hover:opacity-70 transition-all">Shop For Men</Link>
