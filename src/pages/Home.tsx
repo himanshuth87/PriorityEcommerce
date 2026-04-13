@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ProductCard } from '../components/ProductCard';
 import { Link } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, ArrowRight, Truck, CreditCard, ShieldCheck, PackageCheck } from 'lucide-react';
@@ -58,25 +58,13 @@ export const Home = () => {
     }
   };
 
-  const nextHero = useCallback(() => setCurrentHero((prev) => (prev + 1) % HERO_IMAGES.length), []);
-  const prevHero = useCallback(() => setCurrentHero((prev) => (prev - 1 + HERO_IMAGES.length) % HERO_IMAGES.length), []);
-
-  // Touch swipe for hero
-  const touchStartX = useRef(0);
-  const handleTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) { diff > 0 ? nextHero() : prevHero(); }
-  };
+  const nextHero = () => setCurrentHero((prev) => (prev + 1) % HERO_IMAGES.length);
+  const prevHero = () => setCurrentHero((prev) => (prev - 1 + HERO_IMAGES.length) % HERO_IMAGES.length);
 
   return (
     <main className="font-outfit overflow-x-hidden">
       {/* Hero Section */}
-      <section
-        className="relative w-full aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] bg-black overflow-hidden"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-      >
+      <section className="relative w-full aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] bg-black overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentHero}
@@ -180,40 +168,49 @@ export const Home = () => {
             ))}
           </div>
 
-          <div className="flex flex-col lg:flex-row items-start gap-6 md:gap-8">
+          {/* Desktop: side poster + scroll */}
+          <div className="hidden lg:flex items-start gap-8">
             {tabCategory && (
-              <div className="w-full lg:w-[450px] shrink-0 h-[200px] md:h-[520px] rounded-2xl md:rounded-[3rem] overflow-hidden relative group" style={{ backgroundColor: tabCategory.bgColor }}>
-                <div className="absolute inset-0 p-6 md:p-10 z-10 flex flex-col justify-end">
-                  <h3 className="text-xl md:text-4xl font-semibold text-white uppercase italic tracking-tighter leading-none mb-2 md:mb-4">{tabCategory.subtitle}</h3>
+              <div className="w-[450px] shrink-0 h-[520px] rounded-[3rem] overflow-hidden relative group" style={{ backgroundColor: tabCategory.bgColor }}>
+                <div className="absolute inset-0 p-10 z-10 flex flex-col justify-end">
+                  <h3 className="text-4xl font-semibold text-white uppercase italic tracking-tighter leading-none mb-4">{tabCategory.subtitle}</h3>
                 </div>
                 <img src={IMG.refPoster} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
             )}
 
-            <div className="flex-1 relative min-w-0 group/tabs overflow-hidden md:overflow-visible">
-              <div className="absolute top-1/2 -translate-y-1/2 w-full hidden md:flex justify-between pointer-events-none z-10">
-                <button
-                  onClick={scrollLeft}
-                  className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-gray-900 hover:bg-gray-50 border border-gray-200 shadow-xl pointer-events-auto transition-all -translate-x-6 active:scale-95 hover:-translate-x-8"
-                >
+            <div className="flex-1 relative min-w-0">
+              <div className="absolute top-1/2 -translate-y-1/2 w-full flex justify-between pointer-events-none z-10">
+                <button onClick={scrollLeft} className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-gray-900 hover:bg-gray-50 border border-gray-200 shadow-xl pointer-events-auto transition-all -translate-x-6 active:scale-95 hover:-translate-x-8">
                   <ChevronLeft size={24} />
                 </button>
-                <button
-                  onClick={scrollRight}
-                  className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-gray-900 hover:bg-gray-50 border border-gray-200 shadow-xl pointer-events-auto transition-all translate-x-6 active:scale-95 hover:translate-x-8"
-                >
+                <button onClick={scrollRight} className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-gray-900 hover:bg-gray-50 border border-gray-200 shadow-xl pointer-events-auto transition-all translate-x-6 active:scale-95 hover:translate-x-8">
                   <ChevronRight size={24} />
                 </button>
               </div>
-
-              <div ref={scrollRef} className="flex gap-4 md:gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-6 touch-pan-x">
+              <div ref={scrollRef} className="flex gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-6">
                 {tabProducts.map(p => (
-                  <div key={p.id} className="min-w-[200px] md:min-w-[300px] snap-start">
+                  <div key={p.id} className="min-w-[300px] snap-start">
                     <ProductCard product={p} />
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+
+          {/* Mobile: simple horizontal scroll like Best Sellers */}
+          <div className="lg:hidden">
+            <div
+              ref={scrollRef}
+              className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-6 px-1"
+              style={{ WebkitOverflowScrolling: 'touch' }}
+            >
+              {tabProducts.map(p => (
+                <div key={p.id} className="min-w-[160px] sm:min-w-[200px] shrink-0">
+                  <ProductCard product={p} />
+                </div>
+              ))}
             </div>
           </div>
         </div>
