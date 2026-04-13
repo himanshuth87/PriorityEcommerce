@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ProductCard } from '../components/ProductCard';
 import { Link } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, ArrowRight, Truck, CreditCard, ShieldCheck, PackageCheck } from 'lucide-react';
@@ -58,54 +58,64 @@ export const Home = () => {
     }
   };
 
-  const nextHero = () => setCurrentHero((prev) => (prev + 1) % HERO_IMAGES.length);
-  const prevHero = () => setCurrentHero((prev) => (prev - 1 + HERO_IMAGES.length) % HERO_IMAGES.length);
+  const nextHero = useCallback(() => setCurrentHero((prev) => (prev + 1) % HERO_IMAGES.length), []);
+  const prevHero = useCallback(() => setCurrentHero((prev) => (prev - 1 + HERO_IMAGES.length) % HERO_IMAGES.length), []);
+
+  // Touch swipe for hero
+  const touchStartX = useRef(0);
+  const handleTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) { diff > 0 ? nextHero() : prevHero(); }
+  };
 
   return (
     <main className="font-outfit">
       {/* Hero Section */}
-      <section className="relative w-full aspect-[3/4] sm:aspect-[4/5] md:aspect-[21/9] bg-black overflow-hidden">
+      <section
+        className="relative w-full aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] bg-black overflow-hidden"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <AnimatePresence mode="wait">
           <motion.div
             key={currentHero}
-            initial={{ opacity: 0, scale: 1.1 }}
+            initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
+            transition={{ duration: 1, ease: "easeOut" }}
             className="absolute inset-0"
           >
             <img
               alt="Priority Premium Collection"
-              className="w-full h-full object-cover object-top relative z-10"
+              className="w-full h-full object-cover object-center relative z-10"
               src={HERO_IMAGES[currentHero]}
               referrerPolicy="no-referrer"
               loading="eager"
             />
-            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/40 to-transparent z-20" />
+            <div className="absolute inset-x-0 bottom-0 h-32 md:h-40 bg-gradient-to-t from-black/50 to-transparent z-20" />
           </motion.div>
         </AnimatePresence>
 
-        <div className="absolute bottom-6 md:bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-3 md:gap-6 z-30">
-          <button onClick={prevHero} className="w-9 h-9 md:w-12 md:h-12 border border-white/20 rounded-full flex items-center justify-center hover:bg-white/10 backdrop-blur-sm transition-all text-white">
-            <ChevronLeft size={18} className="md:hidden" /><ChevronLeft size={24} className="hidden md:block" />
-          </button>
-          <div className="flex gap-2 md:gap-3">
-            {HERO_IMAGES.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentHero((i))}
-                className={`h-1 md:h-1.5 rounded-full transition-all duration-500 ${i === currentHero ? 'w-7 md:w-10 bg-white' : 'w-1.5 md:w-2 bg-white/30 hover:bg-white/50'}`}
-              />
-            ))}
-          </div>
-          <button onClick={nextHero} className="w-9 h-9 md:w-12 md:h-12 border border-white/20 rounded-full flex items-center justify-center hover:bg-white/10 backdrop-blur-sm transition-all text-white">
-            <ChevronRight size={18} className="md:hidden" /><ChevronRight size={24} className="hidden md:block" />
-          </button>
+        {/* Desktop arrow buttons */}
+        <button onClick={prevHero} className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 border border-white/20 rounded-full items-center justify-center hover:bg-white/10 backdrop-blur-sm transition-all text-white">
+          <ChevronLeft size={24} />
+        </button>
+        <button onClick={nextHero} className="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 border border-white/20 rounded-full items-center justify-center hover:bg-white/10 backdrop-blur-sm transition-all text-white">
+          <ChevronRight size={24} />
+        </button>
+
+        {/* Dots */}
+        <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 md:gap-3 z-30">
+          {HERO_IMAGES.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentHero(i)}
+              className={`h-1.5 md:h-2 rounded-full transition-all duration-500 ${i === currentHero ? 'w-8 md:w-10 bg-white' : 'w-1.5 md:w-2 bg-white/40 hover:bg-white/60'}`}
+            />
+          ))}
         </div>
       </section>
-
-      {/* Hero Section */}
-      {/* ... Hero section code ... */}
 
       {/* Main Categories */}
       <section className="container mx-auto px-4 md:px-6 lg:px-8 py-10 md:py-24">
@@ -248,7 +258,7 @@ export const Home = () => {
       </section>
 
       {/* Features Bar */}
-      <section className="pt-10 pb-24 md:pt-20 md:pb-32 bg-gray-50 border-t border-gray-100">
+      <section className="pt-10 pb-8 md:pt-20 md:pb-32 bg-gray-50 border-t border-gray-100">
         <div className="container mx-auto px-4 md:px-8">
           <div className="flex flex-col items-center mb-10 md:mb-20">
             <p className="text-lg md:text-3xl font-semibold text-[#14052b] uppercase tracking-tighter">Why Shop With Us</p>
