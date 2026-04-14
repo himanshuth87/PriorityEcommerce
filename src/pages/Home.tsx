@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { ProductCard } from '../components/ProductCard';
 import { Link } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, ArrowRight, Truck, CreditCard, ShieldCheck, PackageCheck } from 'lucide-react';
@@ -110,9 +110,6 @@ const HeroSlider = () => {
 
 export const Home = () => {
   const [activeTab, setActiveTab] = useState<string>('college-backpacks');
-  const [catFlipIndex, setCatFlipIndex] = useState(0);
-  const [catFlipDir, setCatFlipDir] = useState(1);
-  const catTouchRef = useRef<number | null>(null);
   const tabProducts = useMemo(() => getProductsByCategory(activeTab), [activeTab]);
   const bestSellers = useMemo(() => getBestSellers(), []);
   const tabCategory = CATEGORIES.find((c) => c.slug === activeTab);
@@ -122,97 +119,23 @@ export const Home = () => {
   const scrollRight = () => scrollRef.current?.scrollBy({ left: 320, behavior: 'smooth' });
   const scrollLeft = () => scrollRef.current?.scrollBy({ left: -320, behavior: 'smooth' });
 
-  const goNextCat = () => {
-    if (catFlipIndex < CATS.length - 1) { setCatFlipDir(1); setCatFlipIndex(i => i + 1); }
-  };
-  const goPrevCat = () => {
-    if (catFlipIndex > 0) { setCatFlipDir(-1); setCatFlipIndex(i => i - 1); }
-  };
-  const onCatTouchStart = (e: React.TouchEvent) => { catTouchRef.current = e.touches[0].clientX; };
-  const onCatTouchEnd = (e: React.TouchEvent) => {
-    if (catTouchRef.current === null) return;
-    const diff = catTouchRef.current - e.changedTouches[0].clientX;
-    if (diff > 40) goNextCat();
-    else if (diff < -40) goPrevCat();
-    catTouchRef.current = null;
-  };
-
   return (
     <main className="font-outfit">
       <HeroSlider />
 
-      {/* Mobile Categories — Book-page flip stack */}
-      <section className="md:hidden py-6 px-5">
-        <h2 className="text-xs font-black uppercase tracking-[0.3em] text-gray-400 mb-4 text-center">Shop By Category</h2>
-        <div
-          className="relative select-none mx-auto"
-          style={{ perspective: '1200px', maxWidth: '88vw' }}
-          onTouchStart={onCatTouchStart}
-          onTouchEnd={onCatTouchEnd}
-        >
-          {/* Stacked cards behind for depth effect */}
-          {[2, 1].map((offset) => {
-            const idx = catFlipIndex + offset;
-            if (idx >= CATS.length) return null;
-            return (
-              <div
-                key={`stack-${offset}`}
-                className="absolute inset-x-0 bottom-0 rounded-2xl overflow-hidden pointer-events-none"
-                style={{
-                  top: `${offset * 10}px`,
-                  transform: `scale(${1 - offset * 0.05}) translateY(${offset * 4}px)`,
-                  filter: `brightness(${0.6 - offset * 0.15})`,
-                  zIndex: 10 - offset,
-                  transformOrigin: 'bottom center',
-                }}
-              >
-                <div className="relative w-full" style={{ paddingBottom: '78%' }}>
-                  <img src={CATS[idx].img} alt="" className="absolute inset-0 w-full h-full object-cover bg-gray-100" />
-                </div>
+      {/* Mobile Categories — 3-column grid, all visible at once */}
+      <section className="md:hidden py-5 px-4">
+        <h2 className="text-[10px] font-black uppercase tracking-[0.35em] text-gray-400 mb-3 text-center">Shop By Category</h2>
+        <div className="grid grid-cols-3 gap-2.5">
+          {CATS.map((cat) => (
+            <Link key={cat.label} to={cat.to} className="group relative rounded-2xl overflow-hidden shadow-md bg-gray-100" style={{ aspectRatio: '3/4' }}>
+              <img src={cat.img} alt={cat.label} className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-active:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-2.5">
+                <span className="block text-white text-[9px] font-black uppercase tracking-widest leading-none">{cat.label}</span>
               </div>
-            );
-          })}
-
-          {/* Active card */}
-          <div style={{ position: 'relative', zIndex: 20 }}>
-            <AnimatePresence mode="wait" custom={catFlipDir}>
-              <motion.div
-                key={catFlipIndex}
-                custom={catFlipDir}
-                initial={{ x: catFlipDir * 160, opacity: 0, scale: 0.95 }}
-                animate={{ x: 0, opacity: 1, scale: 1 }}
-                exit={{ x: catFlipDir * -160, opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.28, ease: 'easeOut' }}
-                className="w-full rounded-2xl overflow-hidden shadow-2xl"
-              >
-                <Link to={CATS[catFlipIndex].to} className="block w-full relative" style={{ paddingBottom: '78%' }}>
-                  <img src={CATS[catFlipIndex].img} alt={CATS[catFlipIndex].label} className="absolute inset-0 w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />
-                  <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between">
-                    <span className="text-white text-base font-black uppercase tracking-widest">{CATS[catFlipIndex].label}</span>
-                    <div className="w-9 h-9 rounded-full bg-white/90 flex items-center justify-center shadow-lg shrink-0">
-                      <ArrowRight size={15} className="text-gray-900" />
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          {/* Navigation */}
-          <div className="flex justify-between items-center mt-5 px-1">
-            <button onClick={goPrevCat} disabled={catFlipIndex === 0} className="p-2 text-gray-400 disabled:opacity-20 transition-opacity">
-              <ChevronLeft size={20} />
-            </button>
-            <div className="flex gap-2">
-              {CATS.map((_, i) => (
-                <div key={i} className={`h-1.5 rounded-full transition-all duration-300 ${i === catFlipIndex ? 'w-6 bg-priority-blue' : 'w-1.5 bg-gray-200'}`} />
-              ))}
-            </div>
-            <button onClick={goNextCat} disabled={catFlipIndex === CATS.length - 1} className="p-2 text-gray-400 disabled:opacity-20 transition-opacity">
-              <ChevronRight size={20} />
-            </button>
-          </div>
+            </Link>
+          ))}
         </div>
       </section>
 
