@@ -235,24 +235,21 @@ export const Home = () => {
       </section>
 
       {/* Editorial Banner */}
-      <section className="bg-banner-blue text-white pt-0 pb-10 md:pb-16 relative">
+      <section className="bg-banner-blue text-white py-10 md:py-16 relative">
         <div className="container mx-auto px-4 md:px-8 relative z-10">
           <div className="flex flex-col md:flex-row items-center gap-6 md:gap-16">
-            {/* Image bleeds upward out of the section */}
-            <div className="md:w-1/2 relative z-20 -mt-10 md:-mt-20">
+            {/* Image bleeds out from both top and bottom */}
+            <div className="md:w-1/2 relative z-20 -my-16 md:-my-28">
               <img src={IMG.banner} alt="Style" className="rounded-2xl md:rounded-[3rem] shadow-2xl w-full h-auto" />
             </div>
-            <div className="md:w-1/2 relative text-center md:text-left overflow-hidden py-4">
-              {/* NEW ARRIVAL — prominent heading */}
-              <p className="text-[11px] md:text-xs font-black uppercase tracking-[0.4em] text-white mb-2 md:mb-3">New Arrival</p>
-              <h2 className="text-2xl md:text-5xl font-black uppercase tracking-[0.15em] mb-1">Ready For</h2>
-              {/* READY FOR YOUR JOURNEY — watermark style behind */}
-              <div className="relative">
-                <span className="block text-[clamp(2.5rem,12vw,7rem)] font-black leading-none uppercase tracking-tighter italic text-white/10 select-none pointer-events-none">
-                  Your<br />Journey
-                </span>
-              </div>
-              <div className="flex justify-center md:justify-start gap-4 md:gap-6 mt-4 md:mt-6">
+            <div className="md:w-1/2 relative text-center md:text-left py-4">
+              {/* Watermark — large ghost text behind */}
+              <span className="block text-[clamp(3rem,14vw,8rem)] font-black leading-none uppercase tracking-tighter italic text-white/10 select-none pointer-events-none mb-2">
+                Ready For<br />Your Journey
+              </span>
+              {/* NEW ARRIVAL — bold prominent heading */}
+              <h2 className="text-3xl md:text-5xl font-black uppercase tracking-[0.2em] text-white mt-4 md:mt-6">New Arrival</h2>
+              <div className="flex justify-center md:justify-start gap-4 md:gap-6 mt-5 md:mt-8">
                 <Link to="/women" className="text-[10px] md:text-xs font-semibold uppercase tracking-widest border-b-2 border-white pb-1 hover:opacity-70 transition-all">Shop For Women</Link>
                 <Link to="/men" className="text-[10px] md:text-xs font-semibold uppercase tracking-widest border-b-2 border-white pb-1 hover:opacity-70 transition-all">Shop For Men</Link>
               </div>
