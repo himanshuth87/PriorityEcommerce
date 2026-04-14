@@ -235,28 +235,37 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* Editorial Banner */}
-      <section className="bg-banner-blue text-white relative py-10 md:py-0" style={{ overflow: 'visible', zIndex: 1 }}>
-        <div className="container mx-auto px-5 md:px-8 relative z-10">
-          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
-            {/* Image — sits normally on mobile, bleeds top+bottom on desktop */}
-            <div className="md:w-1/2 relative z-30 w-full rounded-2xl md:rounded-[3rem] overflow-hidden shadow-2xl md:-my-20">
+      {/* Editorial Banner — mobile: full-bleed image with overlay | desktop: side-by-side */}
+      {/* Mobile version */}
+      <div className="md:hidden relative overflow-hidden" style={{ aspectRatio: '3/4' }}>
+        <img src={IMG.banner} alt="New Arrival" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-6 pb-8">
+          <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/60 mb-2">New Arrival</p>
+          <h2 className="text-3xl font-black uppercase tracking-tight text-white leading-none mb-1">Ready For</h2>
+          <p className="text-3xl font-black uppercase tracking-tight text-white/20 leading-none mb-6 select-none">Your Journey</p>
+          <div className="flex gap-5">
+            <Link to="/women" className="text-[11px] font-bold uppercase tracking-widest border-b-2 border-white text-white pb-1">Shop Women</Link>
+            <Link to="/men" className="text-[11px] font-bold uppercase tracking-widest border-b-2 border-white text-white pb-1">Shop Men</Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop version */}
+      <section className="hidden md:block bg-banner-blue text-white relative" style={{ overflow: 'visible', zIndex: 1 }}>
+        <div className="container mx-auto px-8 relative z-10">
+          <div className="flex flex-row items-center gap-16">
+            <div className="w-1/2 relative z-30 rounded-[3rem] overflow-hidden shadow-2xl -my-20">
               <img src={IMG.banner} alt="Style" className="w-full h-auto object-cover" />
             </div>
-
-            {/* Text column */}
-            <div className="md:w-1/2 text-center md:text-left md:py-20">
-              {/* NEW ARRIVAL — big bold heading */}
-              <h2 className="text-3xl md:text-6xl font-black uppercase tracking-[0.12em] text-white mb-3 md:mb-6">
-                New Arrival
-              </h2>
-              {/* Ready For Your Journey — watermark */}
-              <p className="text-[clamp(1rem,5vw,2.5rem)] font-black leading-tight uppercase tracking-tighter text-white/15 select-none pointer-events-none">
+            <div className="w-1/2 text-left py-20">
+              <h2 className="text-6xl font-black uppercase tracking-[0.12em] text-white mb-6">New Arrival</h2>
+              <p className="text-[2.5rem] font-black leading-tight uppercase tracking-tighter text-white/15 select-none pointer-events-none">
                 Ready For<br />Your Journey
               </p>
-              <div className="flex justify-center md:justify-start gap-6 mt-6 md:mt-10">
-                <Link to="/women" className="text-[11px] font-bold uppercase tracking-widest border-b-2 border-white pb-1 hover:opacity-70 transition-all">Shop Women</Link>
-                <Link to="/men" className="text-[11px] font-bold uppercase tracking-widest border-b-2 border-white pb-1 hover:opacity-70 transition-all">Shop Men</Link>
+              <div className="flex gap-6 mt-10">
+                <Link to="/women" className="text-xs font-bold uppercase tracking-widest border-b-2 border-white pb-1 hover:opacity-70 transition-all">Shop Women</Link>
+                <Link to="/men" className="text-xs font-bold uppercase tracking-widest border-b-2 border-white pb-1 hover:opacity-70 transition-all">Shop Men</Link>
               </div>
             </div>
           </div>
