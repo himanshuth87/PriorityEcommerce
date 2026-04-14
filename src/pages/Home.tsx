@@ -22,11 +22,14 @@ const HERO_SLIDES = [
   { src: '/Creatives/editorial-5.jpg',   cta: 'Shop Laptop Bags',       to: '/laptop-backpacks' },
 ];
 
+const CATS = [
+  { to: '/backpacks',   label: 'Backpacks',   img: '/Category/Backpack.png'       },
+  { to: '/luggage',     label: 'Luggage',     img: '/Category/Travelling Bag.png' },
+  { to: '/accessories', label: 'Accessories', img: '/Category/Accessories.png'    },
+];
+
 const IMG = {
   banner: '/Category/Artboard 1 1.png',
-  catBackpacks: '/Category/Backpack.png',
-  catLuggage: '/Category/Travelling Bag.png',
-  catAccessories: '/Category/Accessories.png',
   refPoster: '/Category/ref.png',
 };
 
@@ -149,71 +152,49 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* Main Categories */}
-      {(() => {
-        const CATS = [
-          { to: '/backpacks',   label: 'Backpacks',    img: IMG.catBackpacks   },
-          { to: '/luggage',     label: 'Luggage',      img: IMG.catLuggage     },
-          { to: '/accessories', label: 'Accessories',  img: IMG.catAccessories },
-        ];
-        return (
-          <>
-            {/* Mobile — Hotstar snippet horizontal scroll */}
-            <section className="md:hidden py-8 overflow-hidden">
-              <div
-                className="flex gap-3 overflow-x-auto no-scrollbar snap-x snap-mandatory px-4 pb-2"
-                style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x' }}
-              >
-                {CATS.map((cat) => (
-                  <Link
-                    key={cat.label}
-                    to={cat.to}
-                    className="relative min-w-[72vw] aspect-[3/4] rounded-2xl overflow-hidden shrink-0 snap-start bg-gray-100 active:scale-[0.97] transition-transform duration-150"
-                  >
-                    <img
-                      src={cat.img}
-                      alt={cat.label}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
-                    <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
-                      <span className="text-white text-sm font-black uppercase tracking-widest leading-tight">
-                        {cat.label}
-                      </span>
-                      <div className="w-9 h-9 rounded-full bg-white/90 flex items-center justify-center shadow-lg shrink-0">
-                        <ArrowRight size={15} className="text-gray-900" />
-                      </div>
-                    </div>
-                  </Link>
-                ))}
+      {/* Mobile Categories — Hotstar snippet scroll */}
+      <section className="md:hidden py-8">
+        <div
+          className="flex gap-3 overflow-x-auto no-scrollbar snap-x snap-mandatory px-4 pb-2"
+          style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x' }}
+        >
+          {CATS.map((cat) => (
+            <Link
+              key={cat.label}
+              to={cat.to}
+              className="relative min-w-[72vw] aspect-[3/4] rounded-2xl overflow-hidden shrink-0 snap-start bg-gray-100 active:scale-[0.97] transition-transform duration-150"
+            >
+              <img src={cat.img} alt={cat.label} className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
+                <span className="text-white text-sm font-black uppercase tracking-widest">{cat.label}</span>
+                <div className="w-9 h-9 rounded-full bg-white/90 flex items-center justify-center shadow-lg shrink-0">
+                  <ArrowRight size={15} className="text-gray-900" />
+                </div>
               </div>
-            </section>
+            </Link>
+          ))}
+        </div>
+      </section>
 
-            {/* Desktop — 3-column grid */}
-            <section className="hidden md:block container mx-auto px-6 lg:px-8 py-24">
-              <div className="grid grid-cols-3 gap-10">
-                {CATS.map((cat) => (
-                  <Link
-                    key={cat.label}
-                    to={cat.to}
-                    className="group relative h-[560px] rounded-[3rem] overflow-hidden transition-all duration-700 hover:-translate-y-3 shadow-2xl bg-gray-100"
-                  >
-                    <img
-                      src={cat.img}
-                      alt={cat.label}
-                      className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-700" />
-                    <div className="absolute bottom-10 right-10 w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-2xl translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                      <ArrowRight size={24} className="text-gray-900" />
-                    </div>
-                  </Link>
-                ))}
+      {/* Desktop Categories — 3-column grid */}
+      <section className="hidden md:block container mx-auto px-6 lg:px-8 py-24">
+        <div className="grid grid-cols-3 gap-10">
+          {CATS.map((cat) => (
+            <Link
+              key={cat.label}
+              to={cat.to}
+              className="group relative h-[560px] rounded-[3rem] overflow-hidden transition-all duration-700 hover:-translate-y-3 shadow-2xl bg-gray-100"
+            >
+              <img src={cat.img} alt={cat.label} className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-700" />
+              <div className="absolute bottom-10 right-10 w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-2xl translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                <ArrowRight size={24} className="text-gray-900" />
               </div>
-            </section>
-          </>
-        );
-      })()}
+            </Link>
+          ))}
+        </div>
+      </section>
 
       {/* Editorial Banner */}
       <section className="bg-banner-blue text-white py-12 md:py-24 relative overflow-hidden">
