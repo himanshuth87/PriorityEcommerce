@@ -1,15 +1,63 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Shield, LogOut, Settings, Users, BarChart3, 
-  Truck, LayoutDashboard, Box, Activity, Bell,
-  ArrowUpRight, Plus, Search, Filter, Edit3, Trash2, Camera, ExternalLink, X, Check, ArrowRight, Save
+import {
+  LogOut, Settings, Users,
+  Truck, LayoutDashboard, Box,
+  Plus, Edit3, Trash2, X, Check,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { CloudinaryUpload } from '../components/CloudinaryUpload';
 import { api } from '../lib/api';
+
+// ─── Category maps ────────────────────────────────────────────
+const MAIN_CATEGORIES = [
+  { value: 'backpacks',    label: 'Backpacks' },
+  { value: 'luggage',      label: 'Luggage' },
+  { value: 'accessories',  label: 'Accessories' },
+  { value: 'junior',       label: 'Priority Junior' },
+  { value: 'premium',      label: 'Premium Collection' },
+];
+
+const SUBCATEGORIES: Record<string, { value: string; label: string }[]> = {
+  backpacks: [
+    { value: 'college-backpacks',   label: 'College Backpacks' },
+    { value: 'school-backpacks',    label: 'School Backpacks' },
+    { value: 'laptop-backpacks',    label: 'Laptop Backpacks' },
+    { value: 'trekking-backpacks',  label: 'Trekking Backpacks' },
+  ],
+  luggage: [
+    { value: 'cabin-luggage',       label: 'Cabin Luggage (≤ 20")' },
+    { value: 'check-in-luggage',    label: 'Check-in Luggage (24"+)' },
+    { value: 'trolley-bags',        label: 'Trolley Bags' },
+    { value: 'travel-sets',         label: 'Travel Sets' },
+  ],
+  accessories: [
+    { value: 'duffle-bags',         label: 'Duffle Bags' },
+    { value: 'wallets',             label: 'Wallets & Pouches' },
+    { value: 'travel-accessories',  label: 'Travel Accessories' },
+  ],
+  junior: [
+    { value: 'school-backpacks',    label: 'School Backpacks' },
+    { value: 'kids-accessories',    label: 'Kids Accessories' },
+  ],
+  premium: [
+    { value: 'premium-backpacks',   label: 'Premium Backpacks' },
+    { value: 'premium-luggage',     label: 'Premium Luggage' },
+    { value: 'premium-accessories', label: 'Premium Accessories' },
+  ],
+};
+
+type ColorVariant = { color: string; colorCode: string; image: string };
+
+const BLANK_FORM = (): Partial<Product> => ({
+  name: '', price: 0, originalPrice: 0, category: 'backpacks', subcategory: '',
+  gender: 'unisex', stock: 50, description: '', isPremium: false, images: [],
+  features: [], sku: 'PB-' + Math.floor(1000 + Math.random() * 9000),
+});
+
+const inputCls = 'w-full bg-[var(--color-bg-main)] border border-[var(--color-border-main)] rounded-xl px-4 py-3.5 text-sm font-medium text-[var(--color-text-main)] focus:border-priority-blue outline-none transition-all';
 
 export const AdminDashboard = () => {
   const { user, logout, isLoading, isAuthenticated } = useAuth();
@@ -18,18 +66,8 @@ export const AdminDashboard = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [isAddingProduct, setIsAddingProduct] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [formData, setFormData] = useState<Partial<Product>>({
-    name: '',
-    price: 0,
-    originalPrice: 0,
-    category: 'backpacks',
-    gender: 'unisex',
-    stock: 50,
-    description: '',
-    isPremium: false,
-    images: [],
-    sku: 'PB-' + Math.floor(1000 + Math.random() * 9000)
-  });
+  const [formData, setFormData] = useState<Partial<Product>>(BLANK_FORM());
+  const [variants, setVariants] = useState<ColorVariant[]>([]);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) navigate('/login');
@@ -76,25 +114,28 @@ export const AdminDashboard = () => {
   ];
 
   const metrics = [
-    { label: 'Total Revenue', value: '₹14,28,450', trend: '+12.5%', info: 'vs last month' },
-    { label: 'Active Orders', value: '842', trend: '+8.1%', info: 'Pending shipping' },
-    { label: 'Total Customers', value: '3,240', trend: '+14.2%', info: 'New signups' },
-    { label: 'Success Rate', value: '98.4%', trend: '+0.4%', info: 'Completed' },
+    { label: 'Total Products', value: String(products.length), trend: '', info: 'In catalogue' },
+    { label: 'Active Orders', value: '—', trend: '', info: 'Coming soon' },
+    { label: 'Total Customers', value: '—', trend: '', info: 'Coming soon' },
+    { label: 'Revenue', value: '—', trend: '', info: 'Coming soon' },
   ];
 
+  const addVariant = () => setVariants((v: ColorVariant[]) => [...v, { color: '', colorCode: '#000000', image: '' }]);
+  const updateVariant = (i: number, key: keyof ColorVariant, val: string) =>
+    setVariants((v: ColorVariant[]) => v.map((item: ColorVariant, idx: number) => idx === i ? { ...item, [key]: val } : item));
+  const removeVariant = (i: number) => setVariants((v: ColorVariant[]) => v.filter((_: ColorVariant, idx: number) => idx !== i));
+
   const resetForm = () => {
-    setFormData({
-      name: '', price: 0, originalPrice: 0, category: 'backpacks',
-      gender: 'unisex', stock: 50, description: '', isPremium: false,
-      images: [], sku: 'PB-' + Math.floor(1000 + Math.random() * 9000)
-    });
+    setFormData(BLANK_FORM());
+    setVariants([]);
   };
 
   const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     const payload = {
       name: formData.name,
-      category: formData.category,
+      category: formData.subcategory || formData.category,
+      sub_category: formData.subcategory || '',
       price: formData.price,
       original_price: formData.originalPrice,
       stock: formData.stock,
@@ -102,6 +143,8 @@ export const AdminDashboard = () => {
       is_premium: formData.isPremium,
       image_url: formData.images?.[0] || '',
       sku: formData.sku,
+      features: formData.features || [],
+      colors: variants.map((v: ColorVariant) => ({ name: v.color, code: v.colorCode, image: v.image })),
     };
     try {
       if (editingProduct) {
@@ -139,7 +182,7 @@ export const AdminDashboard = () => {
     if (!window.confirm('Are you sure you want to delete this product?')) return;
     try {
       await api.deleteProduct(id);
-      setProducts(prev => prev.filter((p: Product) => p.id !== id));
+      setProducts((prev: Product[]) => prev.filter((p: Product) => p.id !== id));
     } catch {
       alert('Failed to delete product.');
     }
@@ -148,6 +191,7 @@ export const AdminDashboard = () => {
   const openEdit = (product: Product) => {
     setEditingProduct(product);
     setFormData(product);
+    setVariants((product.variants || []).map((v: any) => ({ color: v.color || '', colorCode: v.colorCode || '#000000', image: v.images?.[0] || '' })));
     setIsAddingProduct(true);
   };
 
@@ -228,26 +272,9 @@ export const AdminDashboard = () => {
 
                   <div className="bg-[var(--color-bg-card)] p-8 rounded-3xl border border-[var(--color-border-main)]">
                     <h3 className="text-xl font-black text-[var(--color-text-main)] mb-6 uppercase tracking-tight">Recent Orders</h3>
-                    <div className="space-y-3">
-                      {[
-                        { id: 'ORD-8842', user: 'John Wick', loc: 'Mumbai', price: '₹18,450', status: 'Shipped' },
-                        { id: 'ORD-8841', user: 'Sarah Connor', loc: 'New Delhi', price: '₹14,200', status: 'Pending' },
-                        { id: 'ORD-8840', user: 'Bruce Wayne', loc: 'Bangalore', price: '₹42,000', status: 'Delivered' }
-                      ].map((order, i) => (
-                        <div key={i} className="flex flex-wrap items-center justify-between p-5 bg-[var(--color-bg-main)] border border-[var(--color-border-main)] rounded-2xl hover:border-priority-blue transition-all">
-                          <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 bg-priority-blue/10 text-priority-blue rounded-xl flex items-center justify-center font-bold text-xs">{order.id.split('-')[1]}</div>
-                            <div>
-                              <p className="text-sm font-bold text-[var(--color-text-main)]">{order.user}</p>
-                              <p className="text-[10px] text-[var(--color-text-muted)] uppercase font-bold">{order.loc} • Order {order.id}</p>
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-sm font-black text-[var(--color-text-main)]">{order.price}</p>
-                            <span className="text-[9px] font-black uppercase bg-priority-blue text-white px-3 py-1 rounded-full tracking-widest">{order.status}</span>
-                          </div>
-                        </div>
-                      ))}
+                    <div className="py-16 text-center text-[var(--color-text-muted)]">
+                      <p className="text-xs font-bold uppercase tracking-widest">No orders yet</p>
+                      <p className="text-[10px] mt-2 text-gray-400">Orders will appear here once customers start purchasing.</p>
                     </div>
                   </div>
                 </motion.div>
@@ -287,122 +314,150 @@ export const AdminDashboard = () => {
                       </div>
 
                       <form onSubmit={handleSaveProduct} className="space-y-8">
+
+                        {/* ── Row 1: Name · Price · MRP ── */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                           <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase text-priority-blue">Product Name</label>
-                            <input 
-                              required
-                              type="text" 
-                              value={formData.name}
-                              onChange={(e) => setFormData({...formData, name: e.target.value})}
-                              placeholder="e.g. Urban Blue Pack"
-                              className="w-full bg-[var(--color-bg-main)] border border-[var(--color-border-main)] rounded-xl px-4 py-3.5 text-sm font-medium text-[var(--color-text-main)] focus:border-priority-blue outline-none transition-all"
-                            />
+                            <label className="text-xs font-bold uppercase text-priority-blue tracking-widest">Product Name</label>
+                            <input required type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} placeholder="e.g. Urban Blue Pack" className={inputCls} />
                           </div>
-
                           <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase text-priority-blue">Price (₹)</label>
-                            <input 
-                              required
-                              type="number" 
-                              value={formData.price}
-                              onChange={(e) => setFormData({...formData, price: parseInt(e.target.value)})}
-                              className="w-full bg-[var(--color-bg-main)] border border-[var(--color-border-main)] rounded-xl px-4 py-3.5 text-sm font-medium text-[var(--color-text-main)] focus:border-priority-blue outline-none transition-all"
-                            />
+                            <label className="text-xs font-bold uppercase text-priority-blue tracking-widest">Sale Price (₹)</label>
+                            <div className="relative">
+                              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-gray-400">₹</span>
+                              <input required type="number" min="0" value={formData.price} onChange={(e) => setFormData({...formData, price: parseInt(e.target.value)||0})} className={`${inputCls} pl-8`} />
+                            </div>
                           </div>
-
                           <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase text-priority-blue">Original Price (₹)</label>
-                            <input 
-                              required
-                              type="number" 
-                              value={formData.originalPrice}
-                              onChange={(e) => setFormData({...formData, originalPrice: parseInt(e.target.value)})}
-                              className="w-full bg-[var(--color-bg-main)] border border-[var(--color-border-main)] rounded-xl px-4 py-3.5 text-sm font-medium text-[var(--color-text-main)] focus:border-priority-blue outline-none transition-all"
-                            />
-                          </div>
-
-                          <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase text-priority-blue">Main Category</label>
-                            <select 
-                              value={formData.category}
-                              onChange={(e) => setFormData({...formData, category: e.target.value})}
-                              className="w-full bg-[var(--color-bg-main)] border border-[var(--color-border-main)] rounded-xl px-4 py-3.5 text-sm font-medium text-[var(--color-text-main)] focus:border-priority-blue outline-none transition-all"
-                            >
-                              <option value="backpacks">Backpacks</option>
-                              <option value="luggage">Luggage</option>
-                              <option value="accessories">Accessories</option>
-                            </select>
-                          </div>
-
-                          <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase text-priority-blue">Gender/Style</label>
-                            <select 
-                              value={formData.gender}
-                              onChange={(e) => setFormData({...formData, gender: e.target.value as any})}
-                              className="w-full bg-[var(--color-bg-main)] border border-[var(--color-border-main)] rounded-xl px-4 py-3.5 text-sm font-medium text-[var(--color-text-main)] focus:border-priority-blue outline-none transition-all"
-                            >
-                              <option value="men">Men</option>
-                              <option value="women">Women</option>
-                              <option value="kids">Kids</option>
-                              <option value="premium">Premium</option>
-                              <option value="unisex">Unisex</option>
-                            </select>
-                          </div>
-
-                          <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase text-priority-blue">Units in Stock</label>
-                            <input 
-                              type="number" 
-                              value={formData.stock}
-                              onChange={(e) => setFormData({...formData, stock: parseInt(e.target.value)})}
-                              className="w-full bg-[var(--color-bg-main)] border border-[var(--color-border-main)] rounded-xl px-4 py-3.5 text-sm font-medium text-[var(--color-text-main)] focus:border-priority-blue outline-none transition-all"
-                            />
+                            <label className="text-xs font-bold uppercase text-priority-blue tracking-widest">MRP / Original Price (₹)</label>
+                            <div className="relative">
+                              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-gray-400">₹</span>
+                              <input required type="number" min="0" value={formData.originalPrice} onChange={(e) => setFormData({...formData, originalPrice: parseInt(e.target.value)||0})} className={`${inputCls} pl-8`} />
+                            </div>
                           </div>
                         </div>
 
+                        {/* ── Row 2: Category · Sub-category · Gender · Stock ── */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                          <div className="space-y-2">
+                            <label className="text-xs font-bold uppercase text-priority-blue tracking-widest">Main Category</label>
+                            <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value, subcategory: ''})} className={inputCls}>
+                              {MAIN_CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+                            </select>
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-xs font-bold uppercase text-priority-blue tracking-widest">Sub-Category</label>
+                            <select value={formData.subcategory || ''} onChange={(e) => setFormData({...formData, subcategory: e.target.value})} className={inputCls}>
+                              <option value="">— Select —</option>
+                              {(SUBCATEGORIES[formData.category || 'backpacks'] || []).map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+                            </select>
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-xs font-bold uppercase text-priority-blue tracking-widest">Gender / Style</label>
+                            <select value={formData.gender} onChange={(e) => setFormData({...formData, gender: e.target.value as any})} className={inputCls}>
+                              <option value="unisex">Unisex</option>
+                              <option value="men">Men</option>
+                              <option value="women">Women</option>
+                              <option value="kids">Kids</option>
+                            </select>
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-xs font-bold uppercase text-priority-blue tracking-widest">Units in Stock</label>
+                            <input type="number" min="0" value={formData.stock} onChange={(e) => setFormData({...formData, stock: parseInt(e.target.value)||0})} className={inputCls} />
+                          </div>
+                        </div>
+
+                        {/* ── Primary Image ── */}
                         <CloudinaryUpload
-                          label="Product Image"
+                          label="Primary Product Image"
                           value={formData.images?.[0] || ''}
                           onChange={(url) => setFormData({ ...formData, images: [url], image: url })}
                         />
 
+                        {/* ── Colour Variants ── */}
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <label className="text-xs font-bold uppercase text-priority-blue tracking-widest">Colour Variants</label>
+                              <p className="text-[10px] text-gray-400 mt-0.5">Each colour gets its own image uploaded to Cloudinary</p>
+                            </div>
+                            <button type="button" onClick={addVariant} className="flex items-center gap-1.5 text-xs font-bold text-priority-blue border border-priority-blue/30 px-3 py-1.5 rounded-lg hover:bg-priority-blue/5 transition-colors">
+                              <Plus size={12} /> Add Colour
+                            </button>
+                          </div>
+
+                          {variants.length === 0 && (
+                            <p className="text-[11px] text-gray-400 py-6 text-center border-2 border-dashed border-gray-100 rounded-2xl">
+                              No colour variants yet — click "Add Colour" to add one
+                            </p>
+                          )}
+
+                          <div className="space-y-4">
+                            {variants.map((v: ColorVariant, i: number) => (
+                              <div key={i} className="p-5 border border-[var(--color-border-main)] rounded-2xl bg-[var(--color-bg-main)] space-y-4">
+                                <div className="flex items-center gap-3">
+                                  <div className="space-y-1">
+                                    <label className="text-[10px] font-bold uppercase text-gray-400 tracking-widest">Pick Colour</label>
+                                    <input type="color" value={v.colorCode} onChange={(e) => updateVariant(i, 'colorCode', e.target.value)} className="w-12 h-10 rounded-lg cursor-pointer border border-[var(--color-border-main)] p-1 bg-transparent" />
+                                  </div>
+                                  <div className="flex-1 space-y-1">
+                                    <label className="text-[10px] font-bold uppercase text-gray-400 tracking-widest">Colour Name</label>
+                                    <input type="text" value={v.color} onChange={(e) => updateVariant(i, 'color', e.target.value)} placeholder="e.g. Midnight Navy" className={inputCls} />
+                                  </div>
+                                  <button type="button" onClick={() => removeVariant(i)} className="self-end mb-0.5 p-2.5 text-red-400 hover:bg-red-50 rounded-xl transition-colors border border-red-100">
+                                    <X size={14} />
+                                  </button>
+                                </div>
+                                <CloudinaryUpload
+                                  label={`Image — ${v.color || 'this colour'}`}
+                                  value={v.image}
+                                  onChange={(url) => updateVariant(i, 'image', url)}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* ── Description ── */}
                         <div className="space-y-2">
-                          <label className="text-xs font-bold uppercase text-priority-blue">Product Description</label>
-                          <textarea 
-                            value={formData.description}
-                            onChange={(e) => setFormData({...formData, description: e.target.value})}
-                            rows={3}
-                            placeholder="Briefly describe the product features..."
-                            className="w-full bg-[var(--color-bg-main)] border border-[var(--color-border-main)] rounded-xl px-4 py-3.5 text-sm font-medium text-[var(--color-text-main)] focus:border-priority-blue outline-none transition-all resize-none"
+                          <label className="text-xs font-bold uppercase text-priority-blue tracking-widest">Product Description</label>
+                          <textarea value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} rows={3} placeholder="Describe the product — materials, use case, highlights..." className={`${inputCls} resize-none`} />
+                        </div>
+
+                        {/* ── Features ── */}
+                        <div className="space-y-2">
+                          <label className="text-xs font-bold uppercase text-priority-blue tracking-widest">
+                            Key Features <span className="font-normal normal-case tracking-normal text-gray-400 text-[10px]">— one per line</span>
+                          </label>
+                          <textarea
+                            value={(formData.features || []).join('\n')}
+                            onChange={(e) => setFormData({...formData, features: e.target.value.split('\n')})}
+                            rows={4}
+                            placeholder={`17-inch dedicated laptop sleeve\nWater-resistant polyester fabric\nErgonomic padded shoulder straps`}
+                            className={`${inputCls} resize-none font-mono text-xs leading-relaxed`}
                           />
                         </div>
 
+                        {/* ── Premium toggle ── */}
                         <div className="flex items-center gap-3">
-                           <button 
-                             type="button"
-                             onClick={() => setFormData({...formData, isPremium: !formData.isPremium})}
-                             className={`w-10 h-5 rounded-full transition-all relative ${formData.isPremium ? 'bg-priority-blue' : 'bg-gray-200'}`}
-                           >
-                             <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-all ${formData.isPremium ? 'left-5.5' : 'left-0.5'}`} />
-                           </button>
-                           <span className="text-xs font-bold text-[var(--color-text-main)]">Mark as Premium</span>
+                          <button
+                            type="button"
+                            onClick={() => setFormData({...formData, isPremium: !formData.isPremium})}
+                            className={`w-10 h-5 rounded-full transition-all relative ${formData.isPremium ? 'bg-priority-blue' : 'bg-gray-200'}`}
+                          >
+                            <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-all ${formData.isPremium ? 'left-5' : 'left-0.5'}`} />
+                          </button>
+                          <span className="text-xs font-bold text-[var(--color-text-main)]">Mark as Premium</span>
                         </div>
 
+                        {/* ── Submit ── */}
                         <div className="pt-6 border-t border-[var(--color-border-main)] flex gap-4">
-                           <button 
-                             type="submit"
-                             className="flex-1 bg-priority-blue text-white font-bold text-xs py-4 rounded-xl uppercase tracking-widest hover:bg-priority-dark transition-all flex items-center justify-center gap-2"
-                           >
-                              <Check size={16} /> {editingProduct ? 'Save Changes' : 'Add Product'}
-                           </button>
-                           <button 
-                             type="button"
-                             onClick={() => { setIsAddingProduct(false); setEditingProduct(null); }}
-                             className="px-8 bg-gray-100 text-[var(--color-text-main)] font-bold text-xs rounded-xl uppercase tracking-widest hover:bg-gray-200 transition-all"
-                           >
-                             Cancel
-                           </button>
+                          <button type="submit" className="flex-1 bg-priority-blue text-white font-bold text-xs py-4 rounded-xl uppercase tracking-widest hover:bg-priority-dark transition-all flex items-center justify-center gap-2">
+                            <Check size={16} /> {editingProduct ? 'Save Changes' : 'Add Product'}
+                          </button>
+                          <button type="button" onClick={() => { setIsAddingProduct(false); setEditingProduct(null); resetForm(); }} className="px-8 bg-gray-100 text-[var(--color-text-main)] font-bold text-xs rounded-xl uppercase tracking-widest hover:bg-gray-200 transition-all">
+                            Cancel
+                          </button>
                         </div>
                       </form>
                     </motion.div>

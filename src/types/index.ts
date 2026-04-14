@@ -14,6 +14,7 @@ export interface Product {
   rating: number;
   reviews: number;
   image: string;
+  images?: string[];
   variants?: ProductVariant[];
   statusLabel?: string;
   isNew: boolean;
