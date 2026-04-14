@@ -162,7 +162,8 @@ export const Home = () => {
             <Link
               key={cat.label}
               to={cat.to}
-              className="relative min-w-[72vw] aspect-[3/4] rounded-2xl overflow-hidden shrink-0 snap-start bg-gray-100 active:scale-[0.97] transition-transform duration-150"
+              style={{ width: '72vw', height: '85vw', flexShrink: 0 }}
+              className="relative rounded-2xl overflow-hidden snap-start bg-gray-100 active:scale-[0.97] transition-transform duration-150"
             >
               <img src={cat.img} alt={cat.label} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
