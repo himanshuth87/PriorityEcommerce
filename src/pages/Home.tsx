@@ -174,7 +174,7 @@ export const Home = () => {
 
       {/* Editorial Banner — mobile: full-bleed image with overlay | desktop: side-by-side */}
       {/* Mobile version */}
-      <div className="md:hidden relative overflow-hidden bg-banner-blue" style={{ aspectRatio: '4/5' }}>
+      <div className="md:hidden mt-8 relative overflow-hidden bg-banner-blue" style={{ aspectRatio: '4/5' }}>
         <img src={IMG.banner} alt="New Arrival" className="absolute inset-0 w-full h-full object-contain object-center" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-6 pb-8">
