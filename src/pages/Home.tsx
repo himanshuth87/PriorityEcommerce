@@ -73,7 +73,7 @@ const HeroSlider = () => {
         >
           <img
             alt="Priority Premium Collection"
-            className="w-full h-full object-contain"
+            className="w-full h-full object-contain md:object-cover"
             src={HERO_SLIDES[current].src}
             loading="eager"
           />
