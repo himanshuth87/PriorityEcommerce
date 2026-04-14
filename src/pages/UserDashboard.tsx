@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Package, Heart, MapPin, User, Settings, 
-  LogOut, ChevronRight, Moon, Sun, Lock, 
-  Trash2, Edit2, Palette, Mail, Phone, Hash
+import {
+  Package, Heart, MapPin, User, Settings,
+  LogOut, ChevronRight, Lock, Mail, Phone
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -12,23 +11,9 @@ export const UserDashboard = () => {
   const { user, logout, isLoading, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('orders');
-  const [isDarkMode, setIsDarkMode] = useState(document.documentElement.classList.contains('dark'));
-
   useEffect(() => {
     if (!isLoading && !isAuthenticated) navigate('/login');
   }, [isAuthenticated, isLoading, navigate]);
-
-  const toggleTheme = () => {
-    const newMode = !isDarkMode;
-    setIsDarkMode(newMode);
-    if (newMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  };
 
   const navItems = [
     { id: 'orders', label: 'My Orders', icon: Package },
@@ -191,29 +176,13 @@ export const UserDashboard = () => {
                     </div>
                   </div>
 
-                  {/* Security & Theme Section */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="bg-[var(--color-bg-card)] p-10 rounded-[2.5rem] border border-[var(--color-border-main)]">
-                      <div className="flex items-center gap-3 mb-6">
-                        <Lock size={20} className="text-priority-blue" />
-                        <h3 className="text-lg font-black font-outfit text-[var(--color-text-main)] uppercase">Security</h3>
-                      </div>
-                      <button className="w-full py-4 bg-priority-blue text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] transition-all shadow-xl shadow-priority-blue/20">Change Password</button>
+                  {/* Security Section */}
+                  <div className="bg-[var(--color-bg-card)] p-10 rounded-[2.5rem] border border-[var(--color-border-main)]">
+                    <div className="flex items-center gap-3 mb-6">
+                      <Lock size={20} className="text-priority-blue" />
+                      <h3 className="text-lg font-black font-outfit text-[var(--color-text-main)] uppercase">Security</h3>
                     </div>
-
-                    <div className="bg-[var(--color-bg-card)] p-10 rounded-[2.5rem] border border-[var(--color-border-main)]">
-                      <div className="flex items-center gap-3 mb-6">
-                        <Palette size={20} className="text-priority-blue" />
-                        <h3 className="text-lg font-black font-outfit text-[var(--color-text-main)] uppercase">Display</h3>
-                      </div>
-                      <button 
-                        onClick={toggleTheme}
-                        className="w-full flex items-center justify-center gap-3 py-4 bg-[var(--color-text-main)] text-[var(--color-bg-main)] rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] transition-all shadow-lg"
-                      >
-                        {isDarkMode ? <Sun size={14} /> : <Moon size={14} />}
-                        {isDarkMode ? 'Light Mode' : 'Jet Black Mode'}
-                      </button>
-                    </div>
+                    <button className="w-full py-4 bg-priority-blue text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] transition-all shadow-xl shadow-priority-blue/20">Change Password</button>
                   </div>
                 </motion.div>
               )}
