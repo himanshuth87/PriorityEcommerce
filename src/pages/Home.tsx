@@ -250,7 +250,7 @@ export const Home = () => {
                 New Arrival
               </h2>
               {/* Ready For Your Journey — watermark below */}
-              <p className="text-[clamp(2rem,10vw,5rem)] font-black leading-none uppercase tracking-tighter text-white/15 select-none pointer-events-none">
+              <p className="text-[clamp(1rem,5vw,2.5rem)] font-black leading-none uppercase tracking-tighter text-white/15 select-none pointer-events-none">
                 Ready For<br />Your Journey
               </p>
               <div className="flex justify-center md:justify-start gap-4 md:gap-6 mt-6 md:mt-8">
