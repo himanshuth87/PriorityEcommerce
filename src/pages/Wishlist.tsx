@@ -14,7 +14,7 @@ export const Wishlist = () => {
           <div className="w-16 h-16 bg-red-50 dark:bg-red-950/20 rounded-full flex items-center justify-center mx-auto text-red-500 shadow-xl shadow-red-500/10">
             <Heart size={32} fill="currentColor" />
           </div>
-          <h1 className="text-4xl md:text-6xl font-black text-slate-900 dark:text-white uppercase italic tracking-tighter">My Wishlist</h1>
+          <h1 className="text-4xl md:text-6xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">My Wishlist</h1>
           <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">Your curated collection of priority favorites</p>
         </div>
 

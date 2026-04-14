@@ -40,7 +40,7 @@ export const ProductDetail = () => {
   if (!product) {
     return (
       <main className="container mx-auto px-4 py-32 text-center font-outfit">
-        <h1 className="text-3xl font-black mb-4 uppercase italic tracking-tighter">Product Not Found</h1>
+        <h1 className="text-3xl font-black mb-4 uppercase tracking-tighter">Product Not Found</h1>
         <p className="text-gray-400 mb-8 font-bold uppercase tracking-widest text-[11px]">We couldn't find the product you're looking for.</p>
         <Link to="/" className="bg-[#14052b] text-white font-black text-xs px-10 py-5 rounded-xl hover:scale-105 transition-all tracking-widest uppercase inline-block">
           Go Home
@@ -160,7 +160,7 @@ export const ProductDetail = () => {
           {/* Right Column: Info */}
           <div className="lg:col-span-12 xl:col-span-5 space-y-8 md:space-y-12">
             <div className="space-y-4 md:space-y-6 text-center lg:text-left">
-              <h1 className="text-2xl md:text-5xl font-black text-[#14052b] leading-[1.1] tracking-tighter uppercase italic">{product.name}</h1>
+              <h1 className="text-2xl md:text-5xl font-black text-[#14052b] leading-[1.1] tracking-tighter uppercase">{product.name}</h1>
 
               <div className="flex items-center justify-center lg:justify-start gap-4">
                 <div className="flex gap-1">
@@ -172,8 +172,8 @@ export const ProductDetail = () => {
               </div>
 
               <div className="flex items-baseline justify-center lg:justify-start gap-4 md:gap-6 border-t border-gray-50 pt-6 md:pt-8">
-                <span className="text-3xl md:text-5xl font-black text-[#14052b] tracking-tighter italic">{formatPrice(product.price)}</span>
-                <span className="text-base md:text-xl text-gray-300 line-through font-black italic tracking-tighter">{formatPrice(product.originalPrice)}</span>
+                <span className="text-3xl md:text-5xl font-black text-[#14052b] tracking-tighter">{formatPrice(product.price)}</span>
+                <span className="text-base md:text-xl text-gray-300 line-through font-black tracking-tighter">{formatPrice(product.originalPrice)}</span>
               </div>
 
               {/* Variant Selector */}
@@ -254,7 +254,7 @@ export const ProductDetail = () => {
                   {/* Stats & Call to Action */}
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-gray-50 pb-8">
                     <div className="text-center sm:text-left">
-                      <h4 className="text-4xl font-black text-[#14052b] italic tracking-tighter">4.8 / 5.0</h4>
+                      <h4 className="text-4xl font-black text-[#14052b] tracking-tighter">4.8 / 5.0</h4>
                       <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mt-1">Join {product.reviews} verified owners</p>
                     </div>
                     <button 
@@ -287,7 +287,7 @@ export const ProductDetail = () => {
                       className="bg-gray-50 p-6 sm:p-10 rounded-[2.5rem] space-y-6 border border-gray-100 shadow-2xl shadow-gray-200/50"
                     >
                       <div className="space-y-2">
-                        <h4 className="text-lg font-black uppercase tracking-tighter italic text-[#14052b]">Share Your Journey</h4>
+                        <h4 className="text-lg font-black uppercase tracking-tighter text-[#14052b]">Share Your Journey</h4>
                         <p className="text-xs text-gray-400 font-medium">How was your experience with the {product.name}?</p>
                       </div>
 
@@ -334,8 +334,8 @@ export const ProductDetail = () => {
                       {[...Array(5)].map((_, i) => <Star key={i} size={12} className="fill-yellow-400 text-yellow-400" />)}
                     </div>
                     <div>
-                    <p className="text-sm font-black text-[#14052b] uppercase tracking-wide tracking-tighter italic">"Exceeded all expectations"</p>
-                    <p className="text-[13px] text-gray-500 leading-relaxed italic mt-2">This bag is a traveler's dream. The laptop protection is top-notch and it looks very premium in person. Worth every rupee!</p>
+                    <p className="text-sm font-black text-[#14052b] uppercase tracking-wide tracking-tighter">"Exceeded all expectations"</p>
+                    <p className="text-[13px] text-gray-500 leading-relaxed mt-2">This bag is a traveler's dream. The laptop protection is top-notch and it looks very premium in person. Worth every rupee!</p>
                     </div>
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-[10px] font-black">HT</div>

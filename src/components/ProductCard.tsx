@@ -113,7 +113,7 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
 
         <div className="flex justify-between items-start gap-2">
           <Link to={`/product/${product.id}`}>
-            <h3 className="text-[11px] md:text-[13px] font-semibold text-[#14052b] dark:text-[#f8f8f8] leading-tight group-hover:text-priority-blue transition-colors line-clamp-2 uppercase italic tracking-tighter">
+            <h3 className="text-[11px] md:text-[13px] font-semibold text-[#14052b] dark:text-[#f8f8f8] leading-tight group-hover:text-priority-blue transition-colors line-clamp-2 uppercase tracking-tighter">
               {product.name}
             </h3>
           </Link>
@@ -129,10 +129,10 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
         </div>
 
         <div className="flex items-center gap-2 md:gap-3">
-          <span className="text-[13px] md:text-[15px] font-black text-priority-blue italic tracking-tighter">
+          <span className="text-[13px] md:text-[15px] font-black text-priority-blue tracking-tighter">
             {formatPrice(product.price)}
           </span>
-          <span className="text-[10px] md:text-[11px] font-bold text-gray-300 line-through decoration-1 opacity-60 tracking-tighter italic">
+          <span className="text-[10px] md:text-[11px] font-bold text-gray-300 line-through decoration-1 opacity-60 tracking-tighter">
             {formatPrice(product.originalPrice)}
           </span>
         </div>

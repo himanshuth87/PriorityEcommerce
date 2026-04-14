@@ -86,7 +86,7 @@ export const Footer = () => {
           </FooterSection>
 
           <FooterSection title="Contact Us">
-            <address className="not-italic space-y-4 text-xs font-medium">
+            <address className="not-space-y-4 text-xs font-medium">
               <div className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-[#ae9efd]" />
                 <span className="text-gray-400 leading-relaxed">High Spirit Commercial Ventures Pvt. Ltd.<br />Universal Majestic Building, Chembur West<br />Mumbai 400043</span>

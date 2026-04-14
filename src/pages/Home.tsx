@@ -250,7 +250,7 @@ export const Home = () => {
                 New Arrival
               </h2>
               {/* Ready For Your Journey — watermark below */}
-              <p className="text-[clamp(2rem,10vw,5rem)] font-black leading-none uppercase tracking-tighter italic text-white/15 select-none pointer-events-none">
+              <p className="text-[clamp(2rem,10vw,5rem)] font-black leading-none uppercase tracking-tighter text-white/15 select-none pointer-events-none">
                 Ready For<br />Your Journey
               </p>
               <div className="flex justify-center md:justify-start gap-4 md:gap-6 mt-6 md:mt-8">
@@ -284,7 +284,7 @@ export const Home = () => {
             {tabCategory && (
               <div className="hidden lg:block w-[420px] shrink-0 h-[520px] rounded-[3rem] overflow-hidden relative group" style={{ backgroundColor: tabCategory.bgColor }}>
                 <div className="absolute inset-0 p-10 z-10 flex flex-col justify-end">
-                  <h3 className="text-4xl font-semibold text-white uppercase italic tracking-tighter leading-none mb-4">{tabCategory.subtitle}</h3>
+                  <h3 className="text-4xl font-semibold text-white uppercase tracking-tighter leading-none mb-4">{tabCategory.subtitle}</h3>
                 </div>
                 <img src={IMG.refPoster} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />

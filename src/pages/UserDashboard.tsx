@@ -93,7 +93,7 @@ export const UserDashboard = () => {
                   className="space-y-8"
                 >
                   <div className="bg-[var(--color-bg-card)] p-10 rounded-[2.5rem] border border-[var(--color-border-main)]">
-                    <h3 className="text-2xl font-black font-outfit text-[var(--color-text-main)] mb-8 uppercase tracking-tighter italic">Order History</h3>
+                    <h3 className="text-2xl font-black font-outfit text-[var(--color-text-main)] mb-8 uppercase tracking-tighter">Order History</h3>
                     <div className="space-y-4">
                       {[1, 2].map((_, i) => (
                         <div key={i} className="flex flex-col md:flex-row md:items-center justify-between p-8 bg-[var(--color-bg-main)] rounded-[2rem] border border-[var(--color-border-main)] gap-6 hover:border-priority-blue/30 transition-all group">
@@ -126,7 +126,7 @@ export const UserDashboard = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   className="bg-[var(--color-bg-card)] p-10 rounded-[2.5rem] border border-[var(--color-border-main)]"
                 >
-                  <h3 className="text-2xl font-black font-outfit text-[var(--color-text-main)] mb-8 uppercase tracking-tighter italic">Wishlist</h3>
+                  <h3 className="text-2xl font-black font-outfit text-[var(--color-text-main)] mb-8 uppercase tracking-tighter">Wishlist</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <p className="text-xs text-[var(--color-text-muted)] col-span-full">You haven't added anything to your wishlist yet.</p>
                   </div>
@@ -186,7 +186,7 @@ export const UserDashboard = () => {
                       <button className="text-[10px] font-black uppercase text-priority-blue border-b-2 border-priority-blue">Add New</button>
                     </div>
                     
-                    <div className="flex items-center gap-4 p-6 bg-[var(--color-bg-main)] rounded-2xl border border-[var(--color-border-main)] italic text-[var(--color-text-muted)] text-sm">
+                    <div className="flex items-center gap-4 p-6 bg-[var(--color-bg-main)] rounded-2xl border border-[var(--color-border-main)] text-[var(--color-text-muted)] text-sm">
                       <p>No addresses saved yet. Add one for faster checkout.</p>
                     </div>
                   </div>

@@ -20,7 +20,7 @@ export const Checkout = () => {
   if (items.length === 0 && !orderPlaced) {
     return (
       <main className="container mx-auto px-4 py-32 text-center font-outfit">
-        <h1 className="text-4xl font-black mb-4 tracking-tighter uppercase italic">Your cart is empty</h1>
+        <h1 className="text-4xl font-black mb-4 tracking-tighter uppercase">Your cart is empty</h1>
         <p className="text-gray-400 mb- aggregation-12 font-bold uppercase tracking-widest text-[11px]">Please add some products before checking out.</p>
         <Link to="/" className="bg-priority-blue text-white font-black text-[11px] px-12 py-5 rounded-2xl hover:scale-105 transition-all tracking-[0.2em] uppercase shadow-2xl shadow-priority-blue/20 inline-block mt-8">CONTINUE SHOPPING</Link>
       </main>
@@ -38,7 +38,7 @@ export const Checkout = () => {
           <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-10 shadow-xl border border-green-100">
             <ShieldCheck className="w-12 h-12 text-green-600" />
           </div>
-          <h1 className="text-5xl font-black text-green-900 mb-6 uppercase italic tracking-tighter">Order Placed!</h1>
+          <h1 className="text-5xl font-black text-green-900 mb-6 uppercase tracking-tighter">Order Placed!</h1>
           <p className="text-green-800 font-bold mb-4 uppercase tracking-widest text-xs">Authentic Priority Gear reserved.</p>
           <p className="text-sm text-green-600/70 mb-12 font-bold uppercase tracking-widest leading-loose">We'll send you a confirmation message on WhatsApp and Email shortly. Your journey begins.</p>
           <Link to="/" className="bg-priority-blue text-white font-black text-[11px] px-12 py-5 rounded-2xl hover:scale-105 transition-all tracking-[0.2em] uppercase shadow-2xl shadow-priority-blue/20 inline-block">Back to Shop</Link>
@@ -76,7 +76,7 @@ export const Checkout = () => {
   if (!isAuthenticated) {
     return (
       <main className="container mx-auto px-4 py-32 text-center max-w-md font-outfit">
-        <h1 className="text-4xl font-black mb-6 uppercase italic tracking-tighter">Login Required</h1>
+        <h1 className="text-4xl font-black mb-6 uppercase tracking-tighter">Login Required</h1>
         <p className="text-gray-400 mb-12 font-bold uppercase tracking-widest text-[11px] leading-loose">Please sign in to your priority account to continue with your premium order and secure your points.</p>
         <button onClick={() => { setAuthMode('login'); setShowAuthModal(true); }} className="bg-priority-blue text-white font-black text-[11px] px-12 py-5 rounded-2xl hover:scale-105 transition-all tracking-[0.2em] uppercase shadow-2xl shadow-priority-blue/20">SIGN IN NOW</button>
       </main>
@@ -100,7 +100,7 @@ export const Checkout = () => {
           <div className="lg:w-[60%] space-y-8 md:space-y-16">
             <div className="space-y-2 md:space-y-4">
                <span className="text-priority-blue text-[10px] md:text-[11px] font-black uppercase tracking-[0.3em] md:tracking-[0.4em]">Final Step</span>
-               <h1 className="text-3xl md:text-6xl font-black tracking-tighter uppercase italic text-gray-900">Checkout</h1>
+               <h1 className="text-3xl md:text-6xl font-black tracking-tighter uppercase text-gray-900">Checkout</h1>
             </div>
 
             {/* Delivery Form */}
@@ -109,7 +109,7 @@ export const Checkout = () => {
                  <div className="w-10 h-10 md:w-12 md:h-12 bg-priority-blue/5 rounded-xl md:rounded-2xl flex items-center justify-center">
                     <Truck className="w-5 h-5 md:w-6 md:h-6 text-priority-blue" />
                  </div>
-                 <h2 className="text-lg md:text-2xl font-black uppercase tracking-tight italic">Delivery Information</h2>
+                 <h2 className="text-lg md:text-2xl font-black uppercase tracking-tight">Delivery Information</h2>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8">
@@ -147,7 +147,7 @@ export const Checkout = () => {
                   <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm">
                     <ShieldCheck className="w-6 h-6 text-priority-blue" />
                   </div>
-                  <h3 className="text-xl font-black uppercase italic tracking-tight">Verified Digital Payment</h3>
+                  <h3 className="text-xl font-black uppercase tracking-tight">Verified Digital Payment</h3>
                </div>
                <p className="text-sm font-bold text-gray-500 uppercase tracking-widest max-w-lg leading-loose">
                   Your transaction is protected by 256-bit encryption. We accept UPI, Cards, and Net Banking through our secure Razorpay gateway.
@@ -159,7 +159,7 @@ export const Checkout = () => {
           <aside className="lg:w-[40%]">
             <div className="lg:sticky lg:top-24 bg-white rounded-2xl md:rounded-[3rem] border border-gray-100 shadow-2xl shadow-black/[0.03] p-6 md:p-12 space-y-6 md:space-y-10 mb-20 md:mb-0">
               <div>
-                 <h2 className="text-lg md:text-2xl font-black uppercase italic tracking-tighter mb-4 md:mb-8 pb-3 md:pb-4 border-b border-gray-100">Review Items</h2>
+                 <h2 className="text-lg md:text-2xl font-black uppercase tracking-tighter mb-4 md:mb-8 pb-3 md:pb-4 border-b border-gray-100">Review Items</h2>
                  <div className="space-y-4 md:space-y-8 max-h-[300px] md:max-h-[400px] overflow-y-auto pr-2 md:pr-4 custom-scrollbar">
                    {items.map((item) => (
                      <div key={item.product.id} className="flex gap-4 md:gap-6 items-center">
@@ -187,7 +187,7 @@ export const Checkout = () => {
                 <div className="flex justify-between items-end pt-6 md:pt-8 mt-4 border-t border-gray-100">
                    <div className="flex flex-col">
                       <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] md:tracking-[0.4em] text-priority-blue mb-1">Total Payable</span>
-                      <span className="text-2xl md:text-4xl font-black tracking-tighter uppercase italic">{formatPrice(grandTotal)}</span>
+                      <span className="text-2xl md:text-4xl font-black tracking-tighter uppercase">{formatPrice(grandTotal)}</span>
                    </div>
                 </div>
               </div>

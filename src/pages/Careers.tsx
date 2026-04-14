@@ -41,7 +41,7 @@ export const Careers = () => {
           {/* Application Form */}
           <div className="bg-priority-dark p-8 md:p-12 rounded-3xl text-white">
             <h2 className="text-2xl font-black mb-2 uppercase">Apply Now</h2>
-            <p className="text-gray-400 text-sm mb-8 italic">Don't see a role? Send a general application.</p>
+            <p className="text-gray-400 text-sm mb-8">Don't see a role? Send a general application.</p>
             
             <form className="space-y-6">
               <div className="space-y-2">
