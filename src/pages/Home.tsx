@@ -142,9 +142,9 @@ export const Home = () => {
       <HeroSlider />
 
       {/* Mobile Categories — Book-page flip stack */}
-      <section className="md:hidden py-8 px-6">
+      <section className="md:hidden py-4 px-4">
         <div
-          className="relative select-none max-w-sm mx-auto"
+          className="relative select-none max-w-xs mx-auto"
           style={{ perspective: '1200px' }}
           onTouchStart={onCatTouchStart}
           onTouchEnd={onCatTouchEnd}
@@ -165,7 +165,7 @@ export const Home = () => {
                   transformOrigin: 'bottom center',
                 }}
               >
-                <div className="relative w-full" style={{ paddingBottom: '110%' }}>
+                <div className="relative w-full" style={{ paddingBottom: '78%' }}>
                   <img src={CATS[idx].img} alt="" className="absolute inset-0 w-full h-full object-cover bg-gray-100" />
                 </div>
               </div>
@@ -184,7 +184,7 @@ export const Home = () => {
                 transition={{ duration: 0.28, ease: 'easeOut' }}
                 className="w-full rounded-2xl overflow-hidden shadow-2xl"
               >
-                <Link to={CATS[catFlipIndex].to} className="block w-full relative" style={{ paddingBottom: '110%' }}>
+                <Link to={CATS[catFlipIndex].to} className="block w-full relative" style={{ paddingBottom: '78%' }}>
                   <img src={CATS[catFlipIndex].img} alt={CATS[catFlipIndex].label} className="absolute inset-0 w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />
                   <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between">
