@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { ProductCard } from '../components/ProductCard';
-import { getProductsByCategory, PRODUCTS } from '../constants/products';
+import { api } from '../lib/api';
 import { Product } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown, Sparkles } from 'lucide-react';
@@ -10,9 +10,12 @@ export const JuniorPage = () => {
   const [sortBy, setSortBy] = useState('newest');
   const [openFilters, setOpenFilters] = useState<string[]>(['price', 'age']);
 
-  const allProducts = useMemo(() => {
-    // Standard kids category + any junior tagged products
-    return (PRODUCTS as Product[]).filter(p => p.category.includes('school') || p.id.startsWith('s') || p.gender === 'kids');
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    api.getProducts({ category: 'school-backpacks' }).then(res => {
+      if (res.success) setAllProducts(res.data as unknown as Product[]);
+    }).catch(() => {});
   }, []);
 
   const filteredProducts = useMemo(() => {

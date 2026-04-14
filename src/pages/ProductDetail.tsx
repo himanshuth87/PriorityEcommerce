@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Star,
@@ -18,7 +18,8 @@ import {
   Zap
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { getProductById, getProductsByCategory, formatPrice } from '../constants/products';
+import { formatPrice } from '../constants/products';
+import { api } from '../lib/api';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { ProductCard } from '../components/ProductCard';
@@ -34,8 +35,15 @@ export const ProductDetail = () => {
   const [userRating, setUserRating] = useState(0);
   const [showReviewForm, setShowReviewForm] = useState(false);
 
-  const product = useMemo(() => getProductById(id || ''), [id]);
+  const [product, setProduct] = useState<any>(null);
   const isWishlisted = product ? isInWishlist(product.id) : false;
+
+  useEffect(() => {
+    if (!id) return;
+    api.getProduct(id).then(res => {
+      if (res.success) setProduct(res.data);
+    }).catch(() => {});
+  }, [id]);
 
   if (!product) {
     return (
@@ -51,7 +59,13 @@ export const ProductDetail = () => {
 
   const activeVariant = product.variants?.[selectedVariantIndex];
   const displayImages = activeVariant ? activeVariant.images : product.images;
-  const relatedProducts = getProductsByCategory(product.category).filter((p) => p.id !== product.id).slice(0, 4);
+  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
+  useEffect(() => {
+    if (!product?.category) return;
+    api.getProducts({ category: product.category }).then(res => {
+      if (res.success) setRelatedProducts(res.data.filter((p: any) => p.id !== product.id).slice(0, 4));
+    }).catch(() => {});
+  }, [product?.category, product?.id]);
   const inStock = product.stock > 0;
 
   const handleAddToCart = () => {

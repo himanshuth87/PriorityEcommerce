@@ -1,7 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ProductCard } from '../components/ProductCard';
-import { getCategoryBySlug, getProductsByCategory, CATEGORIES, PRODUCTS } from '../constants/products';
+import { getCategoryBySlug, CATEGORIES } from '../constants/products';
+import { api } from '../lib/api';
 import { Product } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown, Filter, ChevronRight, X, SlidersHorizontal } from 'lucide-react';
@@ -20,16 +21,17 @@ export const CategoryPage = () => {
   const isGenderFilter = ['men', 'women', 'kids'].includes(slug);
   const isPremiumFilter = slug === 'premium';
 
-  const allProducts = useMemo(() => {
-    if (isGenderFilter) return (PRODUCTS as Product[]).filter(p => p.gender === slug);
-    if (isPremiumFilter) return (PRODUCTS as Product[]).filter(p => p.isPremium);
-    
-    const products = getProductsByCategory(slug);
-    const subcategoryProducts = CATEGORIES
-      .filter((c) => c.parentCategory === slug)
-      .flatMap((c) => getProductsByCategory(c.slug));
-    
-    return products.length > 0 ? products as Product[] : subcategoryProducts as Product[];
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const params: Record<string, string> = {};
+    if (isGenderFilter) params.gender = slug;
+    else if (isPremiumFilter) params.isPremium = 'true';
+    else params.category = slug;
+
+    api.getProducts(params).then(res => {
+      if (res.success) setAllProducts(res.data as unknown as Product[]);
+    }).catch(() => {});
   }, [slug, isGenderFilter, isPremiumFilter]);
 
   const filteredProducts = useMemo(() => {

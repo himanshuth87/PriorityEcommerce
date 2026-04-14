@@ -1,8 +1,10 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ProductCard } from '../components/ProductCard';
 import { Link } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, ArrowRight, Truck, CreditCard, ShieldCheck, PackageCheck } from 'lucide-react';
-import { CATEGORIES, getProductsByCategory, getBestSellers } from '../constants/products';
+import { CATEGORIES } from '../constants/products';
+import { api } from '../lib/api';
+import type { Product } from '../types';
 import { AnimatePresence, motion } from 'motion/react';
 
 const BACKPACK_TABS = [
@@ -110,9 +112,21 @@ const HeroSlider = () => {
 
 export const Home = () => {
   const [activeTab, setActiveTab] = useState<string>('college-backpacks');
-  const tabProducts = useMemo(() => getProductsByCategory(activeTab), [activeTab]);
-  const bestSellers = useMemo(() => getBestSellers(), []);
+  const [tabProducts, setTabProducts] = useState<Product[]>([]);
+  const [bestSellers, setBestSellers] = useState<Product[]>([]);
   const tabCategory = CATEGORIES.find((c) => c.slug === activeTab);
+
+  useEffect(() => {
+    api.getProducts({ category: activeTab }).then(res => {
+      if (res.success) setTabProducts(res.data as unknown as Product[]);
+    }).catch(() => {});
+  }, [activeTab]);
+
+  useEffect(() => {
+    api.getProducts().then(res => {
+      if (res.success) setBestSellers((res.data as unknown as Product[]).slice(0, 5));
+    }).catch(() => {});
+  }, []);
   const scrollRef = useRef<HTMLDivElement>(null);
   const bestSellersRef = useRef<HTMLDivElement>(null);
 

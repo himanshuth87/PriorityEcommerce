@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { ProductCard } from '../components/ProductCard';
-import { getPremiumProducts } from '../constants/products';
+import { api } from '../lib/api';
 import type { Product } from '../types';
 
 export const PremiumCollection = () => {
@@ -9,7 +9,9 @@ export const PremiumCollection = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    setProducts(getPremiumProducts());
+    api.getProducts({ isPremium: 'true' }).then(res => {
+      if (res.success) setProducts(res.data as unknown as Product[]);
+    }).catch(() => {});
   }, []);
 
   return (

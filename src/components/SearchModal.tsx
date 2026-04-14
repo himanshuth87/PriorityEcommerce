@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { searchProducts, formatPrice } from '../constants/products';
+import { formatPrice } from '../constants/products';
+import { api } from '../lib/api';
 import type { Product } from '../types';
 
 interface SearchModalProps {
@@ -26,7 +27,9 @@ export const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
 
   useEffect(() => {
     if (query.length >= 2) {
-      setResults(searchProducts(query).slice(0, 8));
+      api.getProducts({ search: query }).then(res => {
+        if (res.success) setResults((res.data as unknown as Product[]).slice(0, 8));
+      }).catch(() => {});
     } else {
       setResults([]);
     }

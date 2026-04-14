@@ -52,9 +52,15 @@ export const api = {
   // Products
   getProducts: (params?: Record<string, string>) => {
     const qs = params ? '?' + new URLSearchParams(params).toString() : '';
-    return request<{ products: any[]; page: number; limit: number }>(`/api/products${qs}`);
+    return request<{ success: boolean; data: any[] }>(`/api/v1/catalog/products${qs}`);
   },
-  getProduct: (slug: string) => request<any>(`/api/products/${slug}`),
+  getProduct: (id: string) => request<{ success: boolean; data: any }>(`/api/v1/catalog/products/${id}`),
+  createProduct: (data: any) =>
+    request<any>('/api/v1/catalog/products', { method: 'POST', body: JSON.stringify(data) }),
+  updateProduct: (id: string, data: any) =>
+    request<any>(`/api/v1/catalog/products/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
+  deleteProduct: (id: string) =>
+    request<any>(`/api/v1/catalog/products/${id}`, { method: 'DELETE' }),
 
   // Orders
   getOrders: () => request<any[]>('/api/orders'),

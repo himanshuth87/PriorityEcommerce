@@ -7,9 +7,9 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { PRODUCTS as INITIAL_PRODUCTS } from '../constants/products';
 import { Product } from '../types';
 import { CloudinaryUpload } from '../components/CloudinaryUpload';
+import { api } from '../lib/api';
 
 export const AdminDashboard = () => {
   const { user, logout, isLoading, isAuthenticated } = useAuth();
@@ -34,11 +34,38 @@ export const AdminDashboard = () => {
   useEffect(() => {
     if (!isLoading && !isAuthenticated) navigate('/login');
     if (user && user.role !== 'admin') navigate('/account');
-    
-    if (products.length === 0) {
-      setProducts(INITIAL_PRODUCTS as Product[]);
-    }
-  }, [isAuthenticated, isLoading, navigate, user, products.length]);
+  }, [isAuthenticated, isLoading, navigate, user]);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    api.getProducts().then(res => {
+      if (res.success) {
+        const mapped: Product[] = res.data.map((p: any) => ({
+          id: String(p.id),
+          name: p.name,
+          slug: p.slug || p.name?.toLowerCase().replace(/\s+/g, '-'),
+          price: Number(p.price),
+          originalPrice: Number(p.original_price || p.price),
+          discount: '',
+          rating: Number(p.rating) || 0,
+          reviews: Number(p.review_count) || 0,
+          image: p.image || p.image_url || '',
+          images: Array.isArray(p.images) ? p.images : [p.image || p.image_url || ''],
+          category: p.category_id || p.category || '',
+          description: p.description || '',
+          features: Array.isArray(p.features) ? p.features : [],
+          specifications: p.specifications || {},
+          stock: Number(p.stock) || 0,
+          sku: p.sku || '',
+          isNew: Boolean(p.is_new),
+          highlighted: Boolean(p.is_highlighted),
+          isPremium: Boolean(p.is_premium),
+          createdAt: p.created_at || new Date().toISOString(),
+        }));
+        setProducts(mapped);
+      }
+    }).catch(() => {});
+  }, [isAuthenticated]);
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
@@ -55,43 +82,66 @@ export const AdminDashboard = () => {
     { label: 'Success Rate', value: '98.4%', trend: '+0.4%', info: 'Completed' },
   ];
 
-  const handleSaveProduct = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (editingProduct) {
-      setProducts(prev => prev.map(p => p.id === editingProduct.id ? { ...p, ...formData } as Product : p));
-      setEditingProduct(null);
-    } else {
-      const newProduct: Product = {
-        ...formData,
-        id: 'new-' + Date.now(),
-        slug: formData.name?.toLowerCase().replace(/\s+/g, '-') || 'new-product',
-        createdAt: new Date().toISOString(),
-        rating: 4.5,
-        reviews: 0,
-        highlighted: false,
-        isNew: true,
-        image: formData.images?.[0] || '',
-      } as Product;
-      setProducts(prev => [newProduct, ...prev]);
-      setIsAddingProduct(false);
-    }
+  const resetForm = () => {
     setFormData({
-      name: '',
-      price: 0,
-      originalPrice: 0,
-      category: 'backpacks',
-      gender: 'unisex',
-      stock: 50,
-      description: '',
-      isPremium: false,
-      images: [],
-      sku: 'PB-' + Math.floor(1000 + Math.random() * 9000)
+      name: '', price: 0, originalPrice: 0, category: 'backpacks',
+      gender: 'unisex', stock: 50, description: '', isPremium: false,
+      images: [], sku: 'PB-' + Math.floor(1000 + Math.random() * 9000)
     });
   };
 
-  const handleDeleteProduct = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
-      setProducts(prev => prev.filter(p => p.id !== id));
+  const handleSaveProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const payload = {
+      name: formData.name,
+      category: formData.category,
+      price: formData.price,
+      original_price: formData.originalPrice,
+      stock: formData.stock,
+      description: formData.description,
+      is_premium: formData.isPremium,
+      image_url: formData.images?.[0] || '',
+      sku: formData.sku,
+    };
+    try {
+      if (editingProduct) {
+        await api.updateProduct(editingProduct.id, payload);
+        setEditingProduct(null);
+      } else {
+        await api.createProduct(payload);
+        setIsAddingProduct(false);
+      }
+      // Refresh product list
+      const res = await api.getProducts();
+      if (res.success) {
+        const mapped: Product[] = res.data.map((p: any) => ({
+          id: String(p.id), name: p.name,
+          slug: p.slug || p.name?.toLowerCase().replace(/\s+/g, '-'),
+          price: Number(p.price), originalPrice: Number(p.original_price || p.price),
+          discount: '', rating: Number(p.rating) || 0, reviews: Number(p.review_count) || 0,
+          image: p.image || p.image_url || '',
+          images: Array.isArray(p.images) ? p.images : [p.image || p.image_url || ''],
+          category: p.category_id || p.category || '', description: p.description || '',
+          features: Array.isArray(p.features) ? p.features : [],
+          specifications: p.specifications || {}, stock: Number(p.stock) || 0,
+          sku: p.sku || '', isNew: Boolean(p.is_new), highlighted: Boolean(p.is_highlighted),
+          isPremium: Boolean(p.is_premium), createdAt: p.created_at || new Date().toISOString(),
+        }));
+        setProducts(mapped);
+      }
+      resetForm();
+    } catch {
+      alert('Failed to save product. Check console.');
+    }
+  };
+
+  const handleDeleteProduct = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this product?')) return;
+    try {
+      await api.deleteProduct(id);
+      setProducts(prev => prev.filter((p: Product) => p.id !== id));
+    } catch {
+      alert('Failed to delete product.');
     }
   };
 

@@ -86,7 +86,7 @@ export const Footer = () => {
           </FooterSection>
 
           <FooterSection title="Contact Us">
-            <address className="not-space-y-4 text-xs font-medium">
+            <address className="not-italic space-y-4 text-xs font-medium">
               <div className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-[#ae9efd]" />
                 <span className="text-gray-400 leading-relaxed">High Spirit Commercial Ventures Pvt. Ltd.<br />Universal Majestic Building, Chembur West<br />Mumbai 400043</span>
@@ -107,9 +107,9 @@ export const Footer = () => {
       <div className="container mx-auto px-5 md:px-10 mt-8 md:mt-16 pt-6 md:pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 md:gap-6">
         <p className="text-[9px] md:text-[10px] text-gray-500 font-semibold uppercase tracking-widest text-center sm:text-left">&copy; {new Date().getFullYear()} High Spirit Commercial Ventures Pvt. Ltd.</p>
         <div className="flex items-center gap-6 md:gap-8">
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors text-[10px] font-semibold uppercase tracking-widest">Instagram</a>
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors text-[10px] font-semibold uppercase tracking-widest">Facebook</a>
-          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors text-[10px] font-semibold uppercase tracking-widest">YouTube</a>
+          <a href="https://www.instagram.com/priority.bags?igsh=OXJ6d3I5MXM0djU3" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors text-[10px] font-semibold uppercase tracking-widest">Instagram</a>
+          <a href="https://www.facebook.com/share/16nwvio56J/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors text-[10px] font-semibold uppercase tracking-widest">Facebook</a>
+          <a href="https://youtube.com/@prioritybags?si=MvAj7X6_M2L_-ago" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors text-[10px] font-semibold uppercase tracking-widest">YouTube</a>
         </div>
       </div>
     </footer>
