@@ -58,7 +58,7 @@ const HeroSlider = () => {
 
   return (
     <section
-      className="relative w-full bg-black overflow-hidden" style={{ height: '92vw', maxHeight: '560px' }}
+      className="relative w-full bg-black overflow-hidden aspect-[16/9]"
       onPointerEnter={(e) => { if (e.pointerType === 'mouse') isPausedRef.current = true; }}
       onPointerLeave={(e) => { if (e.pointerType === 'mouse') isPausedRef.current = false; }}
     >
@@ -73,7 +73,7 @@ const HeroSlider = () => {
         >
           <img
             alt="Priority Premium Collection"
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-contain"
             src={HERO_SLIDES[current].src}
             loading="eager"
           />
@@ -160,8 +160,8 @@ export const Home = () => {
 
       {/* Editorial Banner — mobile: full-bleed image with overlay | desktop: side-by-side */}
       {/* Mobile version */}
-      <div className="md:hidden relative overflow-hidden" style={{ aspectRatio: '4/5' }}>
-        <img src={IMG.banner} alt="New Arrival" className="absolute inset-0 w-full h-full object-cover object-top" />
+      <div className="md:hidden relative overflow-hidden bg-banner-blue" style={{ aspectRatio: '4/5' }}>
+        <img src={IMG.banner} alt="New Arrival" className="absolute inset-0 w-full h-full object-contain object-center" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-6 pb-8">
           <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/60 mb-2">New Arrival</p>
