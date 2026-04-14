@@ -9,6 +9,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { PRODUCTS as INITIAL_PRODUCTS } from '../constants/products';
 import { Product } from '../types';
+import { CloudinaryUpload } from '../components/CloudinaryUpload';
 
 export const AdminDashboard = () => {
   const { user, logout, isLoading, isAuthenticated } = useAuth();
@@ -310,21 +311,11 @@ export const AdminDashboard = () => {
                           </div>
                         </div>
 
-                        <div className="space-y-2">
-                          <label className="text-xs font-bold uppercase text-priority-blue">Image Link (URL)</label>
-                          <div className="flex gap-4">
-                            <input 
-                              type="text" 
-                              value={formData.images?.[0] || ''}
-                              onChange={(e) => setFormData({...formData, images: [e.target.value]})}
-                              placeholder="Paste path to image here"
-                              className="flex-1 bg-[var(--color-bg-main)] border border-[var(--color-border-main)] rounded-xl px-4 py-3.5 text-sm font-medium text-[var(--color-text-main)] focus:border-priority-blue outline-none transition-all"
-                            />
-                            <div className="w-12 h-12 bg-gray-50 rounded-xl border border-[var(--color-border-main)] flex items-center justify-center overflow-hidden shrink-0">
-                               {formData.images?.[0] ? <img src={formData.images[0]} className="w-full h-full object-cover" /> : <Camera size={18} className="text-gray-400" />}
-                            </div>
-                          </div>
-                        </div>
+                        <CloudinaryUpload
+                          label="Product Image"
+                          value={formData.images?.[0] || ''}
+                          onChange={(url) => setFormData({ ...formData, images: [url], image: url })}
+                        />
 
                         <div className="space-y-2">
                           <label className="text-xs font-bold uppercase text-priority-blue">Product Description</label>
