@@ -235,21 +235,25 @@ export const Home = () => {
       </section>
 
       {/* Editorial Banner */}
-      <section className="bg-banner-blue text-white py-10 md:py-16 relative">
+      <section className="bg-banner-blue text-white relative" style={{ padding: '0', overflow: 'visible', zIndex: 1 }}>
         <div className="container mx-auto px-4 md:px-8 relative z-10">
           <div className="flex flex-col md:flex-row items-center gap-6 md:gap-16">
-            {/* Image bleeds out from both top and bottom */}
-            <div className="md:w-1/2 relative z-20 -my-16 md:-my-28">
+            {/* Image — bleeds above and below the blue section */}
+            <div className="md:w-1/2 relative" style={{ zIndex: 30, marginTop: '-60px', marginBottom: '-60px' }}>
               <img src={IMG.banner} alt="Style" className="rounded-2xl md:rounded-[3rem] shadow-2xl w-full h-auto" />
             </div>
-            <div className="md:w-1/2 relative text-center md:text-left py-4">
-              {/* Watermark — large ghost text behind */}
-              <span className="block text-[clamp(3rem,14vw,8rem)] font-black leading-none uppercase tracking-tighter italic text-white/10 select-none pointer-events-none mb-2">
+
+            {/* Text column */}
+            <div className="md:w-1/2 text-center md:text-left py-10 md:py-16">
+              {/* NEW ARRIVAL — big bold heading at top */}
+              <h2 className="text-4xl md:text-6xl font-black uppercase tracking-[0.15em] text-white mb-4 md:mb-6">
+                New Arrival
+              </h2>
+              {/* Ready For Your Journey — watermark below */}
+              <p className="text-[clamp(2rem,10vw,5rem)] font-black leading-none uppercase tracking-tighter italic text-white/15 select-none pointer-events-none">
                 Ready For<br />Your Journey
-              </span>
-              {/* NEW ARRIVAL — bold prominent heading */}
-              <h2 className="text-3xl md:text-5xl font-black uppercase tracking-[0.2em] text-white mt-4 md:mt-6">New Arrival</h2>
-              <div className="flex justify-center md:justify-start gap-4 md:gap-6 mt-5 md:mt-8">
+              </p>
+              <div className="flex justify-center md:justify-start gap-4 md:gap-6 mt-6 md:mt-8">
                 <Link to="/women" className="text-[10px] md:text-xs font-semibold uppercase tracking-widest border-b-2 border-white pb-1 hover:opacity-70 transition-all">Shop For Women</Link>
                 <Link to="/men" className="text-[10px] md:text-xs font-semibold uppercase tracking-widest border-b-2 border-white pb-1 hover:opacity-70 transition-all">Shop For Men</Link>
               </div>
