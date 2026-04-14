@@ -111,82 +111,71 @@ export const Header = ({ onSearchOpen }: { onSearchOpen: () => void }) => {
           </ul>
         </nav>
 
-        <div className="flex-1 flex items-center justify-end gap-3 md:gap-6 font-outfit">
-          {/* Dark Mode Toggle */}
-          <button
-            onClick={toggleDarkMode}
-            className="hidden md:flex p-2 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300"
-            aria-label="Toggle dark mode"
-          >
-            {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-
+        <div className="flex-1 flex items-center justify-end font-outfit">
+          {/* Search pill — extra large screens */}
           <button
             onClick={onSearchOpen}
-            className="hidden xl:flex items-center gap-3 px-6 py-2.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/15 hover:border-white/30 transition-all text-white/60 hover:text-white"
+            className="hidden xl:flex items-center gap-2 px-5 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/15 hover:border-white/30 transition-all text-white/60 hover:text-white mr-4"
           >
             <Search size={14} />
-            <span className="text-[11px] font-semibold uppercase tracking-widest border-r border-white/20 pr-4">Search</span>
+            <span className="text-[11px] font-semibold uppercase tracking-widest">Search</span>
           </button>
 
-          <div className="hidden md:flex items-center gap-4">
+          {/* Icon group — all same size, equal gap */}
+          <div className="hidden md:flex items-center gap-1">
+            {/* Wishlist */}
             <Link
               to="/wishlist"
-              className={`p-2 rounded-full transition-all duration-300 ${location.pathname === '/wishlist'
-                ? 'bg-white text-priority-blue scale-110 shadow-lg'
-                : 'text-white/80 hover:text-white hover:scale-110'}`}
+              className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 ${location.pathname === '/wishlist' ? 'bg-white text-priority-blue' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
             >
               <Heart size={20} fill={location.pathname === '/wishlist' ? 'currentColor' : 'none'} />
             </Link>
 
+            {/* Account / User — with theme toggle inside dropdown */}
             {isAuthenticated ? (
               <div className="relative group">
-                <Link
-                  to={user?.role === 'admin' ? "/admin" : "/account"}
-                  className={`flex items-center p-1 rounded-full border transition-all duration-300 ${location.pathname.startsWith('/account') || location.pathname.startsWith('/admin')
-                    ? 'bg-white border-white scale-110 shadow-lg'
-                    : 'bg-white/10 border-white/20 hover:bg-white/20'
-                    }`}
-                >
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-semibold uppercase transition-colors ${location.pathname.startsWith('/account') || location.pathname.startsWith('/admin')
-                    ? 'bg-priority-blue text-white'
-                    : 'bg-white text-priority-blue'
-                    }`}>
+                <button className={`w-10 h-10 flex items-center justify-center rounded-full border transition-all duration-300 ${location.pathname.startsWith('/account') || location.pathname.startsWith('/admin') ? 'bg-white border-white' : 'bg-white/10 border-white/20 hover:bg-white/20'}`}>
+                  <span className={`text-[11px] font-bold uppercase ${location.pathname.startsWith('/account') || location.pathname.startsWith('/admin') ? 'text-priority-blue' : 'text-white'}`}>
                     {user?.name?.charAt(0)}
-                  </div>
-                </Link>
-                <div className="absolute top-full right-0 w-56 mt-3 bg-white shadow-2xl z-50 rounded-2xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all border border-gray-100 p-2">
-                  <div className="text-priority-blue">
-                    <Link to={user?.role === 'admin' ? "/admin" : "/account"} className="w-full flex items-center gap-3 px-6 py-4 text-[11px] font-semibold tracking-widest uppercase hover:bg-gray-50 rounded-xl transition-all">
-                      <LayoutDashboard size={16} /> Admin Panel
-                    </Link>
-                    <button onClick={logout} className="w-full flex items-center gap-3 px-6 py-4 text-[11px] font-semibold tracking-widest uppercase text-red-500 hover:bg-red-50 rounded-xl transition-all">
-                      <LogOut size={16} /> Logout
-                    </button>
-                  </div>
+                  </span>
+                </button>
+                <div className="absolute top-full right-0 w-56 mt-2 bg-white shadow-2xl z-50 rounded-2xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all border border-gray-100 p-2">
+                  <Link to={user?.role === 'admin' ? "/admin" : "/account"} className="flex items-center gap-3 px-4 py-3 text-[11px] font-semibold tracking-widest uppercase text-priority-blue hover:bg-gray-50 rounded-xl transition-all">
+                    <LayoutDashboard size={16} /> {user?.role === 'admin' ? 'Admin Panel' : 'My Account'}
+                  </Link>
+                  <button onClick={toggleDarkMode} className="w-full flex items-center gap-3 px-4 py-3 text-[11px] font-semibold tracking-widest uppercase text-gray-600 hover:bg-gray-50 rounded-xl transition-all">
+                    {isDarkMode ? <Sun size={16} /> : <Moon size={16} />} {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+                  </button>
+                  <div className="my-1 border-t border-gray-100" />
+                  <button onClick={logout} className="w-full flex items-center gap-3 px-4 py-3 text-[11px] font-semibold tracking-widest uppercase text-red-500 hover:bg-red-50 rounded-xl transition-all">
+                    <LogOut size={16} /> Logout
+                  </button>
                 </div>
               </div>
             ) : (
-              <Link
-                to="/login"
-                className={`p-2 rounded-full transition-all duration-300 ${location.pathname === '/login'
-                  ? 'bg-white text-priority-blue scale-110 shadow-lg'
-                  : 'text-white/80 hover:text-white hover:scale-110'}`}
-              >
-                <User size={20} />
-              </Link>
+              <div className="relative group">
+                <Link to="/login" className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 ${location.pathname === '/login' ? 'bg-white text-priority-blue' : 'text-white/80 hover:text-white hover:bg-white/10'}`}>
+                  <User size={20} />
+                </Link>
+                <div className="absolute top-full right-0 w-48 mt-2 bg-white shadow-2xl z-50 rounded-2xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all border border-gray-100 p-2">
+                  <Link to="/login" className="flex items-center gap-3 px-4 py-3 text-[11px] font-semibold tracking-widest uppercase text-priority-blue hover:bg-gray-50 rounded-xl transition-all">
+                    <User size={16} /> Login
+                  </Link>
+                  <button onClick={toggleDarkMode} className="w-full flex items-center gap-3 px-4 py-3 text-[11px] font-semibold tracking-widest uppercase text-gray-600 hover:bg-gray-50 rounded-xl transition-all">
+                    {isDarkMode ? <Sun size={16} /> : <Moon size={16} />} {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+                  </button>
+                </div>
+              </div>
             )}
 
+            {/* Cart */}
             <button
               onClick={() => toggleCart()}
-              className={`p-2.5 rounded-full relative transition-all duration-300 hover:scale-110 active:scale-95 ${(itemCount > 0 || location.pathname === '/checkout')
-                ? 'bg-white text-priority-blue scale-110 shadow-lg'
-                : 'text-white/80 hover:text-white'
-                }`}
+              className={`w-10 h-10 flex items-center justify-center rounded-full relative transition-all duration-300 hover:bg-white/10 active:scale-95 ${(itemCount > 0 || location.pathname === '/checkout') ? 'text-white' : 'text-white/80 hover:text-white'}`}
             >
-              <ShoppingCart size={18} />
+              <ShoppingCart size={20} />
               {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-semibold w-4 h-4 rounded-full flex items-center justify-center border-2 border-[var(--color-nav-bg)]">
+                <span className="absolute top-0.5 right-0.5 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-[var(--color-nav-bg)]">
                   {itemCount}
                 </span>
               )}
@@ -204,16 +193,7 @@ export const Header = ({ onSearchOpen }: { onSearchOpen: () => void }) => {
           <motion.div initial={{ opacity: 0, x: '100%' }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: '100%' }} className="fixed inset-0 z-[60] bg-[var(--color-bg-main)] text-[var(--color-text-main)] overflow-y-auto font-outfit">
             <div className="flex justify-between items-center px-5 py-4 border-b border-[var(--color-border-main)]">
               <img src="/nav bar.png" alt="Priority" className="w-[120px] h-auto dark:invert" />
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={toggleDarkMode}
-                  className="p-2.5 rounded-full border border-[var(--color-border-main)] text-[var(--color-text-muted)]"
-                  aria-label="Toggle dark mode"
-                >
-                  {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-                </button>
-                <button onClick={() => setIsMenuOpen(false)} className="p-2.5 border border-[var(--color-border-main)] rounded-full text-[var(--color-text-main)]"><X size={20} /></button>
-              </div>
+              <button onClick={() => setIsMenuOpen(false)} className="p-2.5 border border-[var(--color-border-main)] rounded-full text-[var(--color-text-main)]"><X size={20} /></button>
             </div>
             <nav className="px-5 py-6 space-y-1">
               {navData.map((nav) => (
@@ -231,12 +211,15 @@ export const Header = ({ onSearchOpen }: { onSearchOpen: () => void }) => {
                 </div>
               ))}
             </nav>
-            <div className="px-5 pt-4 pb-8 border-t border-[var(--color-border-main)]">
+            <div className="px-5 pt-4 pb-8 border-t border-[var(--color-border-main)] space-y-3">
+              <button onClick={toggleDarkMode} className="w-full flex items-center justify-center gap-2 border border-[var(--color-border-main)] text-[var(--color-text-muted)] py-3.5 rounded-2xl text-[11px] font-semibold uppercase tracking-widest">
+                {isDarkMode ? <Sun size={16} /> : <Moon size={16} />} {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+              </button>
               {isAuthenticated ? (
-                <div className="space-y-3">
+                <>
                   <Link to={user?.role === 'admin' ? "/admin" : "/account"} className="w-full bg-priority-blue text-white py-4 rounded-2xl text-[11px] font-semibold uppercase tracking-widest text-center block" onClick={() => setIsMenuOpen(false)}>My Account</Link>
                   <button onClick={() => { logout(); setIsMenuOpen(false); }} className="w-full border border-red-200 text-red-500 py-4 rounded-2xl text-[11px] font-semibold uppercase tracking-widest text-center block">Logout</button>
-                </div>
+                </>
               ) : (
                 <Link to="/login" className="w-full bg-priority-blue text-white py-4 rounded-2xl text-[11px] font-semibold uppercase tracking-widest text-center block" onClick={() => setIsMenuOpen(false)}>Member Login</Link>
               )}
