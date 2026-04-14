@@ -77,20 +77,20 @@ export const Home = () => {
   };
 
   return (
-    <main className="font-outfit overflow-x-hidden">
+    <main className="font-outfit">
       {/* Hero Section */}
       <section
         className="relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[16/9] bg-black overflow-hidden"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
+        onPointerEnter={(e) => { if (e.pointerType === 'mouse') setIsPaused(true); }}
+        onPointerLeave={(e) => { if (e.pointerType === 'mouse') setIsPaused(false); }}
       >
         <AnimatePresence mode="wait">
           <motion.div
             key={currentHero}
-            initial={{ opacity: 0, scale: 1.03 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
             className="absolute inset-0"
           >
             <img
@@ -235,8 +235,8 @@ export const Home = () => {
               </div>
               <div
                 ref={scrollRef}
-                className="flex gap-4 md:gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth pb-6 px-1"
-                style={{ WebkitOverflowScrolling: 'touch' }}
+                className="flex gap-4 md:gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-6 px-1"
+                style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x' }}
               >
                 {tabProducts.map(p => (
                   <div key={p.id} className="min-w-[160px] sm:min-w-[200px] md:min-w-[300px] snap-start shrink-0">
@@ -256,7 +256,7 @@ export const Home = () => {
             <h2 className="text-sm md:text-xl font-semibold uppercase tracking-[0.3em] md:tracking-[0.5em] text-gray-900 mb-2">Shop Best Sellers</h2>
           </div>
 
-          <div className="relative group/carousel overflow-hidden md:overflow-visible">
+          <div className="relative group/carousel">
             <div className="absolute top-1/2 -translate-y-1/2 w-full hidden md:flex justify-between pointer-events-none z-10">
               <button
                 onClick={() => bestSellersRef.current?.scrollBy({ left: -400, behavior: 'smooth' })}
