@@ -80,7 +80,7 @@ export const Home = () => {
     <main className="font-outfit">
       {/* Hero Section */}
       <section
-        className="relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[16/9] bg-black overflow-hidden"
+        className="relative w-full aspect-[16/9] bg-black overflow-hidden"
         onPointerEnter={(e) => { if (e.pointerType === 'mouse') setIsPaused(true); }}
         onPointerLeave={(e) => { if (e.pointerType === 'mouse') setIsPaused(false); }}
       >
