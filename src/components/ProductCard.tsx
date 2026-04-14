@@ -60,8 +60,14 @@ export const ProductCard: React.FC<ProductCardProps> = (props) => {
         </Link>
 
         {/* Status Badges */}
-        <div className="absolute bottom-3 left-3 md:bottom-4 md:left-4 flex flex-col gap-2 pointer-events-none">
-          {product.discount && (
+        <div className="absolute bottom-3 left-3 md:bottom-4 md:left-4 flex flex-wrap gap-2 pointer-events-none">
+          {product.stock === 0 && (
+            <span className="bg-black text-white text-[8px] md:text-[9px] font-black uppercase tracking-widest px-2 py-1 md:px-2.5 md:py-1.5 rounded-full shadow-lg">Sold Out</span>
+          )}
+          {product.statusLabel && (
+            <span className="bg-priority-blue text-white text-[8px] md:text-[9px] font-black uppercase tracking-widest px-2 py-1 md:px-2.5 md:py-1.5 rounded-full shadow-lg">{product.statusLabel}</span>
+          )}
+          {product.discount && !product.statusLabel && (
             <span className="bg-red-500 text-white text-[8px] md:text-[9px] font-black uppercase tracking-widest px-2 py-1 md:px-2.5 md:py-1.5 rounded-full shadow-lg">{product.discount}</span>
           )}
         </div>

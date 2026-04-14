@@ -114,6 +114,16 @@ const productTemplate = (overrides: Partial<Product> & { id: string; name: strin
   variants: [],
   isNew: false,
   highlighted: false,
+const productTemplate = (overrides: Partial<Product> & { id: string; name: string; price: number; originalPrice: number; image: string; category: string }): Product => ({
+  slug: overrides.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+  discount: `${Math.round((1 - overrides.price / overrides.originalPrice) * 100)}% off`,
+  rating: 4.5,
+  reviews: 10,
+  images: [overrides.image],
+  variants: [],
+  statusLabel: undefined,
+  isNew: false,
+  highlighted: false,
   isPremium: false,
   subcategory: undefined,
   gender: 'unisex',
@@ -147,6 +157,7 @@ export const PRODUCTS: Product[] = [
     gender: 'men',
     isNew: true,
     highlighted: true,
+    statusLabel: 'BEST SELLER',
     description: 'The Priority Fabulous Backpack is designed for the modern explorer. Featuring a spacious 17-inch laptop compartment, ergonomic padded straps, and water-resistant fabric, it\'s perfect for college, work, or weekend trips.',
     features: [
       '17-inch dedicated laptop sleeve',
@@ -171,10 +182,11 @@ export const PRODUCTS: Product[] = [
     category: 'college-backpacks',
     gender: 'women',
     isNew: true,
+    statusLabel: 'TRENDING',
+    stock: 0, // Demonstrate Sold Out status
     description: 'The Urban Edge Pro combines street-style aesthetics with functionality. Multiple compartments, padded laptop pocket, and a sleek silhouette make it the go-to bag for the fashion-forward student.',
     features: ['Padded 15.6" laptop pocket', 'Quick-access front pocket', 'Reflective accents for night visibility', 'Compression straps', 'Breathable mesh back panel'],
     specifications: { Material: 'Nylon', Capacity: '28 Liters', Dimensions: '44 × 29 × 14 cm', Weight: '580g', Warranty: '1 Year' },
-    stock: 35,
   }),
   productTemplate({
     id: 'b3',

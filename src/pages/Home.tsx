@@ -13,13 +13,13 @@ const BACKPACK_TABS = [
   { id: 'trekking-backpacks', label: 'Trekking Backpack' },
 ] as const;
 
-const HERO_IMAGES = [
-  '/Creatives/hero-main.jpg',
-  '/Creatives/editorial-1.jpg',
-  '/Creatives/editorial-2.jpg',
-  '/Creatives/editorial-3.jpg',
-  '/Creatives/editorial-4.jpg',
-  '/Creatives/editorial-5.jpg',
+const HERO_SLIDES = [
+  { src: '/Creatives/hero-main.jpg',     cta: 'Shop Campus Picks',     to: '/college-backpacks' },
+  { src: '/Creatives/editorial-1.jpg',   cta: 'Shop Junior Collection', to: '/junior' },
+  { src: '/Creatives/editorial-2.jpg',   cta: 'Shop Junior Collection', to: '/junior' },
+  { src: '/Creatives/editorial-3.jpg',   cta: 'Shop Trekking Gear',     to: '/trekking-backpacks' },
+  { src: '/Creatives/editorial-4.jpg',   cta: 'Shop Luggage',           to: '/luggage' },
+  { src: '/Creatives/editorial-5.jpg',   cta: 'Shop Laptop Bags',       to: '/laptop-backpacks' },
 ];
 
 const IMG = {
@@ -33,17 +33,35 @@ const IMG = {
 export const Home = () => {
   const [activeTab, setActiveTab] = useState<string>('college-backpacks');
   const [currentHero, setCurrentHero] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const isPausedRef = useRef(false);
   const tabProducts = useMemo(() => getProductsByCategory(activeTab), [activeTab]);
   const bestSellers = useMemo(() => getBestSellers(), []);
   const tabCategory = CATEGORIES.find((c) => c.slug === activeTab);
   const scrollRef = useRef<HTMLDivElement>(null);
   const bestSellersRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => { isPausedRef.current = isPaused; }, [isPaused]);
+
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentHero((prev) => (prev + 1) % HERO_IMAGES.length);
+      if (!isPausedRef.current) {
+        setCurrentHero((prev) => (prev + 1) % HERO_SLIDES.length);
+      }
     }, 5000);
     return () => clearInterval(timer);
+  }, []);
+
+  const nextHero = () => setCurrentHero((prev) => (prev + 1) % HERO_SLIDES.length);
+  const prevHero = () => setCurrentHero((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') prevHero();
+      else if (e.key === 'ArrowRight') nextHero();
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
   }, []);
 
   const scrollRight = () => {
@@ -58,50 +76,76 @@ export const Home = () => {
     }
   };
 
-  const nextHero = () => setCurrentHero((prev) => (prev + 1) % HERO_IMAGES.length);
-  const prevHero = () => setCurrentHero((prev) => (prev - 1 + HERO_IMAGES.length) % HERO_IMAGES.length);
-
   return (
     <main className="font-outfit overflow-x-hidden">
       {/* Hero Section */}
-      <section className="relative w-full aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] bg-black overflow-hidden">
+      <section
+        className="relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[16/9] bg-black overflow-hidden"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
         <AnimatePresence mode="wait">
           <motion.div
             key={currentHero}
-            initial={{ opacity: 0, scale: 1.05 }}
+            initial={{ opacity: 0, scale: 1.03 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
             className="absolute inset-0"
           >
             <img
               alt="Priority Premium Collection"
-              className="w-full h-full object-cover object-center relative z-10"
-              src={HERO_IMAGES[currentHero]}
+              className="w-full h-full object-cover object-center z-10 relative"
+              src={HERO_SLIDES[currentHero].src}
               referrerPolicy="no-referrer"
               loading="eager"
             />
-            <div className="absolute inset-x-0 bottom-0 h-32 md:h-40 bg-gradient-to-t from-black/50 to-transparent z-20" />
+            <div className="absolute inset-x-0 bottom-0 h-28 md:h-32 bg-gradient-to-t from-black/55 to-transparent z-20" />
           </motion.div>
         </AnimatePresence>
 
-        {/* Desktop arrow buttons */}
-        <button onClick={prevHero} className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 border border-white/20 rounded-full items-center justify-center hover:bg-white/10 backdrop-blur-sm transition-all text-white">
-          <ChevronLeft size={24} />
+        {/* Desktop arrows — larger, fill on hover */}
+        <button
+          onClick={prevHero}
+          className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 z-30 w-14 h-14 border border-white/30 rounded-full items-center justify-center hover:bg-white hover:text-gray-900 backdrop-blur-sm transition-all duration-300 text-white group shadow-xl"
+        >
+          <ChevronLeft size={26} className="group-hover:-translate-x-0.5 transition-transform" />
         </button>
-        <button onClick={nextHero} className="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 border border-white/20 rounded-full items-center justify-center hover:bg-white/10 backdrop-blur-sm transition-all text-white">
-          <ChevronRight size={24} />
+        <button
+          onClick={nextHero}
+          className="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 z-30 w-14 h-14 border border-white/30 rounded-full items-center justify-center hover:bg-white hover:text-gray-900 backdrop-blur-sm transition-all duration-300 text-white group shadow-xl"
+        >
+          <ChevronRight size={26} className="group-hover:translate-x-0.5 transition-transform" />
         </button>
 
-        {/* Dots */}
-        <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 md:gap-3 z-30">
-          {HERO_IMAGES.map((_, i) => (
+        {/* Mobile dots */}
+        <div className="md:hidden absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-30">
+          {HERO_SLIDES.map((_, i: number) => (
             <button
               key={i}
               onClick={() => setCurrentHero(i)}
-              className={`h-1.5 md:h-2 rounded-full transition-all duration-500 ${i === currentHero ? 'w-8 md:w-10 bg-white' : 'w-1.5 md:w-2 bg-white/40 hover:bg-white/60'}`}
+              className={`h-1.5 rounded-full transition-all duration-500 ${i === currentHero ? 'w-8 bg-white' : 'w-1.5 bg-white/40 hover:bg-white/60'}`}
             />
           ))}
+        </div>
+
+        {/* Desktop bottom bar — slide counter + animated progress */}
+        <div className="hidden md:flex absolute bottom-6 inset-x-0 z-30 items-center justify-end px-8 gap-4">
+          <span className="text-[11px] font-bold tabular-nums tracking-widest text-white/40">
+            {String(currentHero + 1).padStart(2, '0')}
+          </span>
+          <div className="w-32 h-[1.5px] bg-white/20 relative overflow-hidden rounded-full">
+            <motion.div
+              key={currentHero}
+              className="absolute inset-y-0 left-0 bg-white rounded-full"
+              initial={{ width: '0%' }}
+              animate={{ width: '100%' }}
+              transition={{ duration: 5, ease: 'linear' }}
+            />
+          </div>
+          <span className="text-[11px] font-bold tabular-nums tracking-widest text-white/40">
+            {String(HERO_SLIDES.length).padStart(2, '0')}
+          </span>
         </div>
       </section>
 
