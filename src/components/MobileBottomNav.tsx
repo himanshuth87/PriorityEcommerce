@@ -24,7 +24,6 @@ export const MobileBottomNav = ({ onSearchOpen }: { onSearchOpen: () => void }) 
 
   return (
     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[100]">
-      <div className="bg-gradient-to-t from-white/80 dark:from-black/80 to-transparent h-6 pointer-events-none" />
       <nav className="bg-white dark:bg-[#111] border-t border-gray-100 dark:border-white/10 px-2 pb-[env(safe-area-inset-bottom,8px)] pt-2 flex items-center justify-around shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
         {navItems.map((item, index) => {
           const isActive = item.path ? location.pathname === item.path : false;
