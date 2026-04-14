@@ -128,12 +128,11 @@ export const Home = () => {
         <h2 className="text-[10px] font-black uppercase tracking-[0.35em] text-gray-400 mb-3 text-center">Shop By Category</h2>
         <div className="grid grid-cols-3 gap-2.5">
           {CATS.map((cat) => (
-            <Link key={cat.label} to={cat.to} className="group relative rounded-2xl overflow-hidden shadow-md bg-gray-100" style={{ aspectRatio: '3/4' }}>
-              <img src={cat.img} alt={cat.label} className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-active:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-2.5">
-                <span className="block text-white text-[9px] font-black uppercase tracking-widest leading-none">{cat.label}</span>
+            <Link key={cat.label} to={cat.to} className="group flex flex-col items-center gap-2">
+              <div className="w-full rounded-2xl overflow-hidden bg-[#f4f4f4]" style={{ aspectRatio: '1/1' }}>
+                <img src={cat.img} alt={cat.label} className="w-full h-full object-contain p-2 transition-transform duration-300 group-active:scale-105" />
               </div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#14052b]">{cat.label}</span>
             </Link>
           ))}
         </div>
