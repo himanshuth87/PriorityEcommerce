@@ -58,7 +58,7 @@ const HeroSlider = () => {
 
   return (
     <section
-      className="relative w-full aspect-[16/9] bg-black overflow-hidden"
+      className="relative w-full aspect-[3/4] md:aspect-[16/9] bg-black overflow-hidden"
       onPointerEnter={(e) => { if (e.pointerType === 'mouse') isPausedRef.current = true; }}
       onPointerLeave={(e) => { if (e.pointerType === 'mouse') isPausedRef.current = false; }}
     >
@@ -142,10 +142,11 @@ export const Home = () => {
       <HeroSlider />
 
       {/* Mobile Categories — Book-page flip stack */}
-      <section className="md:hidden py-4 px-4">
+      <section className="md:hidden py-6 px-5">
+        <h2 className="text-xs font-black uppercase tracking-[0.3em] text-gray-400 mb-4 text-center">Shop By Category</h2>
         <div
-          className="relative select-none max-w-xs mx-auto"
-          style={{ perspective: '1200px' }}
+          className="relative select-none mx-auto"
+          style={{ perspective: '1200px', maxWidth: '88vw' }}
           onTouchStart={onCatTouchStart}
           onTouchEnd={onCatTouchEnd}
         >
@@ -235,27 +236,27 @@ export const Home = () => {
       </section>
 
       {/* Editorial Banner */}
-      <section className="bg-banner-blue text-white relative" style={{ padding: '0', overflow: 'visible', zIndex: 1 }}>
-        <div className="container mx-auto px-4 md:px-8 relative z-10">
-          <div className="flex flex-col md:flex-row items-center gap-6 md:gap-16">
-            {/* Image — bleeds above and below the blue section */}
-            <div className="md:w-1/2 relative" style={{ zIndex: 30, marginTop: '-60px', marginBottom: '-60px' }}>
-              <img src={IMG.banner} alt="Style" className="rounded-2xl md:rounded-[3rem] shadow-2xl w-full h-auto" />
+      <section className="bg-banner-blue text-white relative py-10 md:py-0" style={{ overflow: 'visible', zIndex: 1 }}>
+        <div className="container mx-auto px-5 md:px-8 relative z-10">
+          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
+            {/* Image — sits normally on mobile, bleeds top+bottom on desktop */}
+            <div className="md:w-1/2 relative z-30 w-full rounded-2xl md:rounded-[3rem] overflow-hidden shadow-2xl md:-my-20">
+              <img src={IMG.banner} alt="Style" className="w-full h-auto object-cover" />
             </div>
 
             {/* Text column */}
-            <div className="md:w-1/2 text-center md:text-left py-10 md:py-16">
-              {/* NEW ARRIVAL — big bold heading at top */}
-              <h2 className="text-4xl md:text-6xl font-black uppercase tracking-[0.15em] text-white mb-4 md:mb-6">
+            <div className="md:w-1/2 text-center md:text-left md:py-20">
+              {/* NEW ARRIVAL — big bold heading */}
+              <h2 className="text-3xl md:text-6xl font-black uppercase tracking-[0.12em] text-white mb-3 md:mb-6">
                 New Arrival
               </h2>
-              {/* Ready For Your Journey — watermark below */}
-              <p className="text-[clamp(1rem,5vw,2.5rem)] font-black leading-none uppercase tracking-tighter text-white/15 select-none pointer-events-none">
+              {/* Ready For Your Journey — watermark */}
+              <p className="text-[clamp(1rem,5vw,2.5rem)] font-black leading-tight uppercase tracking-tighter text-white/15 select-none pointer-events-none">
                 Ready For<br />Your Journey
               </p>
-              <div className="flex justify-center md:justify-start gap-4 md:gap-6 mt-6 md:mt-8">
-                <Link to="/women" className="text-[10px] md:text-xs font-semibold uppercase tracking-widest border-b-2 border-white pb-1 hover:opacity-70 transition-all">Shop For Women</Link>
-                <Link to="/men" className="text-[10px] md:text-xs font-semibold uppercase tracking-widest border-b-2 border-white pb-1 hover:opacity-70 transition-all">Shop For Men</Link>
+              <div className="flex justify-center md:justify-start gap-6 mt-6 md:mt-10">
+                <Link to="/women" className="text-[11px] font-bold uppercase tracking-widest border-b-2 border-white pb-1 hover:opacity-70 transition-all">Shop Women</Link>
+                <Link to="/men" className="text-[11px] font-bold uppercase tracking-widest border-b-2 border-white pb-1 hover:opacity-70 transition-all">Shop Men</Link>
               </div>
             </div>
           </div>
@@ -265,7 +266,8 @@ export const Home = () => {
       {/* Product Tabs Section */}
       <section className="pt-10 md:pt-24 pb-12 bg-white">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="flex overflow-x-auto no-scrollbar gap-4 md:gap-8 md:justify-center md:flex-wrap mb-8 md:mb-16 border-b border-gray-100 pb-1">
+          <h2 className="md:hidden text-base font-black uppercase tracking-[0.2em] text-[#14052b] mb-5 px-1">Browse Backpacks</h2>
+          <div className="flex overflow-x-auto no-scrollbar gap-4 md:gap-8 md:justify-center md:flex-wrap mb-6 md:mb-16 border-b border-gray-100 pb-1">
             {BACKPACK_TABS.map((tab) => (
               <button
                 key={tab.id}
@@ -321,8 +323,8 @@ export const Home = () => {
       {/* Best Sellers Section */}
       <section className="pb-8 pt-10 md:pt-12 bg-white">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="flex flex-col items-center mb-8 md:mb-16">
-            <h2 className="text-sm md:text-xl font-semibold uppercase tracking-[0.3em] md:tracking-[0.5em] text-gray-900 mb-2">Shop Best Sellers</h2>
+          <div className="flex flex-col items-center mb-6 md:mb-16">
+            <h2 className="text-base md:text-xl font-black uppercase tracking-[0.25em] md:tracking-[0.5em] text-[#14052b] mb-2">Best Sellers</h2>
           </div>
 
           <div className="relative group/carousel">
@@ -357,24 +359,24 @@ export const Home = () => {
       </section>
 
       {/* Features Bar */}
-      <section className="pt-10 pb-8 md:pt-20 md:pb-32 bg-gray-50 border-t border-gray-100">
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="flex flex-col items-center mb-10 md:mb-20">
-            <p className="text-lg md:text-3xl font-semibold text-[#14052b] uppercase tracking-tighter">Why Shop With Us</p>
+      <section className="pt-12 pb-10 md:pt-20 md:pb-32 bg-gray-50 border-t border-gray-100">
+        <div className="container mx-auto px-5 md:px-8">
+          <div className="flex flex-col items-center mb-8 md:mb-20">
+            <p className="text-base md:text-3xl font-black text-[#14052b] uppercase tracking-[0.2em]">Why Shop With Us</p>
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-16">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-16">
             {[
               { Icon: Truck, label: 'Fast Delivery', desc: 'Secure shipping across India' },
               { Icon: CreditCard, label: 'Safe Payment', desc: 'UPI and Card ready' },
               { Icon: ShieldCheck, label: 'Brand Promise', desc: 'Certified priority items' },
               { Icon: PackageCheck, label: 'Quality Unit', desc: '8-stage strength testing' }
             ].map((f, i) => (
-              <div key={i} className="flex flex-col items-center text-center space-y-2 md:space-y-4">
-                <div className="w-12 h-12 md:w-16 md:h-16 bg-white rounded-full flex items-center justify-center shadow-xl shadow-priority-blue/5 border border-gray-100 mb-1 md:mb-2 text-priority-blue">
-                  <f.Icon size={24} className="md:hidden" strokeWidth={1.5} /><f.Icon size={32} className="hidden md:block" strokeWidth={1.5} />
+              <div key={i} className="flex flex-col items-center text-center gap-3 md:gap-4">
+                <div className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-2xl flex items-center justify-center shadow-lg border border-gray-100 text-priority-blue">
+                  <f.Icon size={26} strokeWidth={1.5} />
                 </div>
-                <h3 className="text-[10px] md:text-xs font-semibold uppercase tracking-[0.1em] md:tracking-[0.2em]">{f.label}</h3>
-                <p className="text-[9px] md:text-[10px] font-semibold text-gray-400 uppercase tracking-wider md:tracking-widest">{f.desc}</p>
+                <h3 className="text-[11px] md:text-xs font-black uppercase tracking-[0.12em]">{f.label}</h3>
+                <p className="text-[10px] md:text-[10px] font-semibold text-gray-400 leading-snug">{f.desc}</p>
               </div>
             ))}
           </div>
