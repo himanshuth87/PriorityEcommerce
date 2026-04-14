@@ -16,7 +16,7 @@ const NavItem = ({ title, to, items }: NavItemProps) => {
   return (
     <li className="relative group" onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
       <Link
-        className="h-20 flex items-center gap-1.5 px-4 text-[13px] font-semibold font-outfit tracking-[0.15em] text-white hover:text-white/70 transition-all duration-300 relative border-b-4 border-transparent hover:border-white uppercase"
+        className="h-16 flex items-center gap-1.5 px-4 text-[13px] font-semibold font-outfit tracking-[0.15em] text-white hover:text-white/70 transition-all duration-300 relative border-b-4 border-transparent hover:border-white uppercase"
         to={to}
       >
         {title}
@@ -91,7 +91,7 @@ export const Header = ({ onSearchOpen }: { onSearchOpen: () => void }) => {
   ];
 
   return (
-    <header className={`sticky top-0 left-0 right-0 z-50 transition-all duration-[0.8s] h-[60px] md:h-[72px] bg-[var(--color-nav-bg)] ${isScrolled ? 'shadow-[0_8px_30px_rgba(0,0,0,0.12)] backdrop-blur-md' : ''
+    <header className={`sticky top-0 left-0 right-0 z-50 transition-all duration-[0.8s] h-16 bg-[var(--color-nav-bg)] ${isScrolled ? 'shadow-[0_8px_30px_rgba(0,0,0,0.12)] backdrop-blur-md' : ''
       }`}>
       <div className="max-w-[1440px] mx-auto px-4 md:px-8 h-full flex justify-between items-center text-white">
 
@@ -100,7 +100,7 @@ export const Header = ({ onSearchOpen }: { onSearchOpen: () => void }) => {
             <img
               src="/nav bar.png"
               alt="Priority"
-              className="w-[130px] md:w-[200px] h-auto transition-all duration-300"
+              className="w-[140px] h-auto"
             />
           </Link>
         </div>
