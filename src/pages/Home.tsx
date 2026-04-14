@@ -212,20 +212,23 @@ export const Home = () => {
             ))}
           </div>
 
-          {/* Unified layout: side poster + product scroll (same on mobile + desktop) */}
-          <div className="flex flex-col lg:flex-row items-start gap-4 md:gap-8">
+          {/* Layout: poster on desktop only, full-width product scroll on mobile */}
+          <div className="flex items-start gap-8">
+            {/* Poster — desktop only */}
             {tabCategory && (
-              <div className="w-full lg:w-[450px] shrink-0 h-[220px] sm:h-[320px] lg:h-[520px] rounded-2xl md:rounded-[3rem] overflow-hidden relative group" style={{ backgroundColor: tabCategory.bgColor }}>
-                <div className="absolute inset-0 p-6 md:p-10 z-10 flex flex-col justify-end">
-                  <h3 className="text-xl sm:text-2xl lg:text-4xl font-semibold text-white uppercase italic tracking-tighter leading-none mb-2 md:mb-4">{tabCategory.subtitle}</h3>
+              <div className="hidden lg:block w-[420px] shrink-0 h-[520px] rounded-[3rem] overflow-hidden relative group" style={{ backgroundColor: tabCategory.bgColor }}>
+                <div className="absolute inset-0 p-10 z-10 flex flex-col justify-end">
+                  <h3 className="text-4xl font-semibold text-white uppercase italic tracking-tighter leading-none mb-4">{tabCategory.subtitle}</h3>
                 </div>
-                <img src={IMG.refPoster} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform" />
+                <img src={IMG.refPoster} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
             )}
 
+            {/* Product scroll — full width on mobile, flex-1 on desktop */}
             <div className="flex-1 relative min-w-0 w-full">
-              <div className="absolute top-1/2 -translate-y-1/2 w-full hidden md:flex justify-between pointer-events-none z-10">
+              {/* Desktop arrow buttons */}
+              <div className="absolute top-1/2 -translate-y-1/2 w-full hidden lg:flex justify-between pointer-events-none z-10">
                 <button onClick={scrollLeft} className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-gray-900 hover:bg-gray-50 border border-gray-200 shadow-xl pointer-events-auto transition-all -translate-x-6 active:scale-95 hover:-translate-x-8">
                   <ChevronLeft size={24} />
                 </button>
@@ -235,11 +238,11 @@ export const Home = () => {
               </div>
               <div
                 ref={scrollRef}
-                className="flex gap-4 md:gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-6 px-1"
+                className="flex gap-3 sm:gap-4 lg:gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-6 px-1"
                 style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x' }}
               >
                 {tabProducts.map(p => (
-                  <div key={p.id} className="min-w-[160px] sm:min-w-[200px] md:min-w-[300px] snap-start shrink-0">
+                  <div key={p.id} className="min-w-[47vw] sm:min-w-[220px] md:min-w-[240px] lg:min-w-[280px] snap-start shrink-0">
                     <ProductCard product={p} />
                   </div>
                 ))}
@@ -274,11 +277,11 @@ export const Home = () => {
 
             <div
               ref={bestSellersRef}
-              className="flex gap-4 md:gap-6 overflow-x-auto no-scrollbar scroll-smooth pb-10 px-1 sm:px-4 touch-pan-x"
-              style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
+              className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto no-scrollbar pb-10 px-1 sm:px-4"
+              style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x' }}
             >
               {bestSellers.map((product) => (
-                <div key={product.id} className="min-w-[180px] sm:min-w-[240px] md:min-w-[320px] snap-start">
+                <div key={product.id} className="min-w-[47vw] sm:min-w-[240px] md:min-w-[280px] lg:min-w-[320px] shrink-0">
                   <ProductCard product={product} />
                 </div>
               ))}
