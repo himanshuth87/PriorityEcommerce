@@ -2,9 +2,8 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { ProductCard } from '../components/ProductCard';
 import { Link } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, ArrowRight, Truck, CreditCard, ShieldCheck, PackageCheck } from 'lucide-react';
-import { CATEGORIES, getProductsByCategory, getBestSellers, formatPrice } from '../constants/products';
+import { CATEGORIES, getProductsByCategory, getBestSellers } from '../constants/products';
 import { AnimatePresence, motion } from 'motion/react';
-import type { Product } from '../types';
 
 const BACKPACK_TABS = [
   { id: 'college-backpacks', label: 'College Backpack' },
@@ -33,148 +32,186 @@ const IMG = {
   refPoster: '/Category/ref.png',
 };
 
+// ─── Hero Slider (isolated component so slide changes don't re-render the whole page) ───
+const HeroSlider = () => {
+  const [current, setCurrent] = useState(0);
+  const isPausedRef = useRef(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (!isPausedRef.current) setCurrent((p) => (p + 1) % HERO_SLIDES.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const next = () => setCurrent((p) => (p + 1) % HERO_SLIDES.length);
+  const prev = () => setCurrent((p) => (p - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') prev();
+      else if (e.key === 'ArrowRight') next();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  return (
+    <section
+      className="relative w-full aspect-[16/9] bg-black overflow-hidden"
+      onPointerEnter={(e) => { if (e.pointerType === 'mouse') isPausedRef.current = true; }}
+      onPointerLeave={(e) => { if (e.pointerType === 'mouse') isPausedRef.current = false; }}
+    >
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={current}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="absolute inset-0"
+        >
+          <img
+            alt="Priority Premium Collection"
+            className="w-full h-full object-cover object-center"
+            src={HERO_SLIDES[current].src}
+            loading="eager"
+          />
+          <div className="absolute inset-x-0 bottom-0 h-28 md:h-32 bg-gradient-to-t from-black/55 to-transparent" />
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Desktop arrows */}
+      <button onClick={prev} className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 z-30 w-14 h-14 border border-white/30 rounded-full items-center justify-center hover:bg-white hover:text-gray-900 backdrop-blur-sm transition-all duration-300 text-white group shadow-xl">
+        <ChevronLeft size={26} className="group-hover:-translate-x-0.5 transition-transform" />
+      </button>
+      <button onClick={next} className="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 z-30 w-14 h-14 border border-white/30 rounded-full items-center justify-center hover:bg-white hover:text-gray-900 backdrop-blur-sm transition-all duration-300 text-white group shadow-xl">
+        <ChevronRight size={26} className="group-hover:translate-x-0.5 transition-transform" />
+      </button>
+
+      {/* Mobile dots */}
+      <div className="md:hidden absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-30">
+        {HERO_SLIDES.map((_, i) => (
+          <button key={i} onClick={() => setCurrent(i)} className={`h-1.5 rounded-full transition-all duration-300 ${i === current ? 'w-8 bg-white' : 'w-1.5 bg-white/40'}`} />
+        ))}
+      </div>
+
+      {/* Desktop slide counter + progress bar */}
+      <div className="hidden md:flex absolute bottom-6 inset-x-0 z-30 items-center justify-end px-8 gap-4">
+        <span className="text-[11px] font-bold tabular-nums tracking-widest text-white/40">{String(current + 1).padStart(2, '0')}</span>
+        <div className="w-32 h-[1.5px] bg-white/20 relative overflow-hidden rounded-full">
+          <motion.div key={current} className="absolute inset-y-0 left-0 bg-white rounded-full" initial={{ width: '0%' }} animate={{ width: '100%' }} transition={{ duration: 5, ease: 'linear' }} />
+        </div>
+        <span className="text-[11px] font-bold tabular-nums tracking-widest text-white/40">{String(HERO_SLIDES.length).padStart(2, '0')}</span>
+      </div>
+    </section>
+  );
+};
+
 export const Home = () => {
   const [activeTab, setActiveTab] = useState<string>('college-backpacks');
-  const [currentHero, setCurrentHero] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const isPausedRef = useRef(false);
+  const [catFlipIndex, setCatFlipIndex] = useState(0);
+  const [catFlipDir, setCatFlipDir] = useState(1);
+  const catTouchRef = useRef<number | null>(null);
   const tabProducts = useMemo(() => getProductsByCategory(activeTab), [activeTab]);
   const bestSellers = useMemo(() => getBestSellers(), []);
   const tabCategory = CATEGORIES.find((c) => c.slug === activeTab);
   const scrollRef = useRef<HTMLDivElement>(null);
   const bestSellersRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { isPausedRef.current = isPaused; }, [isPaused]);
+  const scrollRight = () => scrollRef.current?.scrollBy({ left: 320, behavior: 'smooth' });
+  const scrollLeft = () => scrollRef.current?.scrollBy({ left: -320, behavior: 'smooth' });
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (!isPausedRef.current) {
-        setCurrentHero((prev) => (prev + 1) % HERO_SLIDES.length);
-      }
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const nextHero = () => setCurrentHero((prev) => (prev + 1) % HERO_SLIDES.length);
-  const prevHero = () => setCurrentHero((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
-
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') prevHero();
-      else if (e.key === 'ArrowRight') nextHero();
-    };
-    window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
-  }, []);
-
-  const scrollRight = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 320, behavior: 'smooth' });
-    }
+  const goNextCat = () => {
+    if (catFlipIndex < CATS.length - 1) { setCatFlipDir(1); setCatFlipIndex(i => i + 1); }
   };
-
-  const scrollLeft = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -320, behavior: 'smooth' });
-    }
+  const goPrevCat = () => {
+    if (catFlipIndex > 0) { setCatFlipDir(-1); setCatFlipIndex(i => i - 1); }
+  };
+  const onCatTouchStart = (e: React.TouchEvent) => { catTouchRef.current = e.touches[0].clientX; };
+  const onCatTouchEnd = (e: React.TouchEvent) => {
+    if (catTouchRef.current === null) return;
+    const diff = catTouchRef.current - e.changedTouches[0].clientX;
+    if (diff > 40) goNextCat();
+    else if (diff < -40) goPrevCat();
+    catTouchRef.current = null;
   };
 
   return (
     <main className="font-outfit">
-      {/* Hero Section */}
-      <section
-        className="relative w-full aspect-[16/9] bg-black overflow-hidden"
-        onPointerEnter={(e) => { if (e.pointerType === 'mouse') setIsPaused(true); }}
-        onPointerLeave={(e) => { if (e.pointerType === 'mouse') setIsPaused(false); }}
-      >
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentHero}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="absolute inset-0"
-          >
-            <img
-              alt="Priority Premium Collection"
-              className="w-full h-full object-cover object-center z-10 relative"
-              src={HERO_SLIDES[currentHero].src}
-              referrerPolicy="no-referrer"
-              loading="eager"
-            />
-            <div className="absolute inset-x-0 bottom-0 h-28 md:h-32 bg-gradient-to-t from-black/55 to-transparent z-20" />
-          </motion.div>
-        </AnimatePresence>
+      <HeroSlider />
 
-        {/* Desktop arrows — larger, fill on hover */}
-        <button
-          onClick={prevHero}
-          className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 z-30 w-14 h-14 border border-white/30 rounded-full items-center justify-center hover:bg-white hover:text-gray-900 backdrop-blur-sm transition-all duration-300 text-white group shadow-xl"
-        >
-          <ChevronLeft size={26} className="group-hover:-translate-x-0.5 transition-transform" />
-        </button>
-        <button
-          onClick={nextHero}
-          className="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 z-30 w-14 h-14 border border-white/30 rounded-full items-center justify-center hover:bg-white hover:text-gray-900 backdrop-blur-sm transition-all duration-300 text-white group shadow-xl"
-        >
-          <ChevronRight size={26} className="group-hover:translate-x-0.5 transition-transform" />
-        </button>
-
-        {/* Mobile dots */}
-        <div className="md:hidden absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-30">
-          {HERO_SLIDES.map((_, i: number) => (
-            <button
-              key={i}
-              onClick={() => setCurrentHero(i)}
-              className={`h-1.5 rounded-full transition-all duration-500 ${i === currentHero ? 'w-8 bg-white' : 'w-1.5 bg-white/40 hover:bg-white/60'}`}
-            />
-          ))}
-        </div>
-
-        {/* Desktop bottom bar — slide counter + animated progress */}
-        <div className="hidden md:flex absolute bottom-6 inset-x-0 z-30 items-center justify-end px-8 gap-4">
-          <span className="text-[11px] font-bold tabular-nums tracking-widest text-white/40">
-            {String(currentHero + 1).padStart(2, '0')}
-          </span>
-          <div className="w-32 h-[1.5px] bg-white/20 relative overflow-hidden rounded-full">
-            <motion.div
-              key={currentHero}
-              className="absolute inset-y-0 left-0 bg-white rounded-full"
-              initial={{ width: '0%' }}
-              animate={{ width: '100%' }}
-              transition={{ duration: 5, ease: 'linear' }}
-            />
-          </div>
-          <span className="text-[11px] font-bold tabular-nums tracking-widest text-white/40">
-            {String(HERO_SLIDES.length).padStart(2, '0')}
-          </span>
-        </div>
-      </section>
-
-      {/* Mobile Categories — Hotstar snippet scroll */}
-      <section className="md:hidden py-8">
+      {/* Mobile Categories — Book-page flip stack */}
+      <section className="md:hidden py-8 px-6">
         <div
-          className="flex gap-3 overflow-x-auto no-scrollbar snap-x snap-mandatory px-4 pb-2"
-          style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x' }}
+          className="relative select-none max-w-sm mx-auto"
+          style={{ perspective: '1200px' }}
+          onTouchStart={onCatTouchStart}
+          onTouchEnd={onCatTouchEnd}
         >
-          {CATS.map((cat) => (
-            <Link
-              key={cat.label}
-              to={cat.to}
-              style={{ width: '72vw', height: '85vw', flexShrink: 0 }}
-              className="relative rounded-2xl overflow-hidden snap-start bg-gray-100 active:scale-[0.97] transition-transform duration-150"
-            >
-              <img src={cat.img} alt={cat.label} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
-                <span className="text-white text-sm font-black uppercase tracking-widest">{cat.label}</span>
-                <div className="w-9 h-9 rounded-full bg-white/90 flex items-center justify-center shadow-lg shrink-0">
-                  <ArrowRight size={15} className="text-gray-900" />
+          {/* Stacked cards behind for depth effect */}
+          {[2, 1].map((offset) => {
+            const idx = catFlipIndex + offset;
+            if (idx >= CATS.length) return null;
+            return (
+              <div
+                key={`stack-${offset}`}
+                className="absolute inset-x-0 bottom-0 rounded-2xl overflow-hidden pointer-events-none"
+                style={{
+                  top: `${offset * 10}px`,
+                  transform: `scale(${1 - offset * 0.05}) translateY(${offset * 4}px)`,
+                  filter: `brightness(${0.6 - offset * 0.15})`,
+                  zIndex: 10 - offset,
+                  transformOrigin: 'bottom center',
+                }}
+              >
+                <div className="relative w-full" style={{ paddingBottom: '110%' }}>
+                  <img src={CATS[idx].img} alt="" className="absolute inset-0 w-full h-full object-cover bg-gray-100" />
                 </div>
               </div>
-            </Link>
-          ))}
+            );
+          })}
+
+          {/* Active card */}
+          <div style={{ position: 'relative', zIndex: 20 }}>
+            <AnimatePresence mode="wait" custom={catFlipDir}>
+              <motion.div
+                key={catFlipIndex}
+                custom={catFlipDir}
+                initial={{ x: catFlipDir * 160, opacity: 0, scale: 0.95 }}
+                animate={{ x: 0, opacity: 1, scale: 1 }}
+                exit={{ x: catFlipDir * -160, opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.28, ease: 'easeOut' }}
+                className="w-full rounded-2xl overflow-hidden shadow-2xl"
+              >
+                <Link to={CATS[catFlipIndex].to} className="block w-full relative" style={{ paddingBottom: '110%' }}>
+                  <img src={CATS[catFlipIndex].img} alt={CATS[catFlipIndex].label} className="absolute inset-0 w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />
+                  <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between">
+                    <span className="text-white text-base font-black uppercase tracking-widest">{CATS[catFlipIndex].label}</span>
+                    <div className="w-9 h-9 rounded-full bg-white/90 flex items-center justify-center shadow-lg shrink-0">
+                      <ArrowRight size={15} className="text-gray-900" />
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Navigation */}
+          <div className="flex justify-between items-center mt-5 px-1">
+            <button onClick={goPrevCat} disabled={catFlipIndex === 0} className="p-2 text-gray-400 disabled:opacity-20 transition-opacity">
+              <ChevronLeft size={20} />
+            </button>
+            <div className="flex gap-2">
+              {CATS.map((_, i) => (
+                <div key={i} className={`h-1.5 rounded-full transition-all duration-300 ${i === catFlipIndex ? 'w-6 bg-priority-blue' : 'w-1.5 bg-gray-200'}`} />
+              ))}
+            </div>
+            <button onClick={goNextCat} disabled={catFlipIndex === CATS.length - 1} className="p-2 text-gray-400 disabled:opacity-20 transition-opacity">
+              <ChevronRight size={20} />
+            </button>
+          </div>
         </div>
       </section>
 
@@ -227,7 +264,7 @@ export const Home = () => {
                 className={`pb-3 md:pb-4 text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.15em] md:tracking-[0.3em] transition-all relative whitespace-nowrap ${activeTab === tab.id ? 'text-priority-blue' : 'text-gray-300 hover:text-gray-500'}`}
               >
                 {tab.label}
-                {activeTab === tab.id && <motion.div layoutId="home-tab-line" className="absolute bottom-0 left-0 right-0 h-1 bg-priority-blue rounded-full" />}
+                {activeTab === tab.id && <div className="absolute bottom-0 left-0 right-0 h-1 bg-priority-blue rounded-full" />}
               </button>
             ))}
           </div>
@@ -258,7 +295,7 @@ export const Home = () => {
               </div>
               <div
                 ref={scrollRef}
-                className="flex gap-3 sm:gap-4 lg:gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-6 px-1"
+                className="flex gap-3 sm:gap-4 lg:gap-6 overflow-x-auto no-scrollbar snap-x snap-proximity pb-6 px-1"
                 style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x' }}
               >
                 {tabProducts.map(p => (
