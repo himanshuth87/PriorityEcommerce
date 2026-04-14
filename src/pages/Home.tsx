@@ -197,10 +197,10 @@ export const Home = () => {
       </section>
 
       {/* Editorial Banner */}
-      <section className="bg-banner-blue text-white py-12 md:py-24 relative overflow-hidden">
+      <section className="bg-banner-blue text-white py-6 md:py-12 relative">
         <div className="container mx-auto px-4 md:px-8 relative z-10">
           <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
-            <div className="md:w-1/2">
+            <div className="md:w-1/2 -my-12 md:-my-20 relative z-20">
               <img src={IMG.banner} alt="Style" className="rounded-2xl md:rounded-[3rem] shadow-2xl w-full h-auto" />
             </div>
             <div className="md:w-1/2 space-y-4 md:space-y-6 text-center md:text-left">
